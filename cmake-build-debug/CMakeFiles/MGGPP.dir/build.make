@@ -78,19 +78,64 @@ CMakeFiles/MGGPP.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MGGPP.dir/main.cpp.s"
 	C:\MinGW\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "C:\Users\Maycon Douglas\CLionProjects\MGGPP\main.cpp" -o CMakeFiles\MGGPP.dir\main.cpp.s
 
+CMakeFiles/MGGPP.dir/Graph.cpp.obj: CMakeFiles/MGGPP.dir/flags.make
+CMakeFiles/MGGPP.dir/Graph.cpp.obj: ../Graph.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="C:\Users\Maycon Douglas\CLionProjects\MGGPP\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/MGGPP.dir/Graph.cpp.obj"
+	C:\MinGW\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\MGGPP.dir\Graph.cpp.obj -c "C:\Users\Maycon Douglas\CLionProjects\MGGPP\Graph.cpp"
+
+CMakeFiles/MGGPP.dir/Graph.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MGGPP.dir/Graph.cpp.i"
+	C:\MinGW\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "C:\Users\Maycon Douglas\CLionProjects\MGGPP\Graph.cpp" > CMakeFiles\MGGPP.dir\Graph.cpp.i
+
+CMakeFiles/MGGPP.dir/Graph.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MGGPP.dir/Graph.cpp.s"
+	C:\MinGW\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "C:\Users\Maycon Douglas\CLionProjects\MGGPP\Graph.cpp" -o CMakeFiles\MGGPP.dir\Graph.cpp.s
+
+CMakeFiles/MGGPP.dir/Node.cpp.obj: CMakeFiles/MGGPP.dir/flags.make
+CMakeFiles/MGGPP.dir/Node.cpp.obj: ../Node.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="C:\Users\Maycon Douglas\CLionProjects\MGGPP\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/MGGPP.dir/Node.cpp.obj"
+	C:\MinGW\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\MGGPP.dir\Node.cpp.obj -c "C:\Users\Maycon Douglas\CLionProjects\MGGPP\Node.cpp"
+
+CMakeFiles/MGGPP.dir/Node.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MGGPP.dir/Node.cpp.i"
+	C:\MinGW\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "C:\Users\Maycon Douglas\CLionProjects\MGGPP\Node.cpp" > CMakeFiles\MGGPP.dir\Node.cpp.i
+
+CMakeFiles/MGGPP.dir/Node.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MGGPP.dir/Node.cpp.s"
+	C:\MinGW\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "C:\Users\Maycon Douglas\CLionProjects\MGGPP\Node.cpp" -o CMakeFiles\MGGPP.dir\Node.cpp.s
+
+CMakeFiles/MGGPP.dir/Edge.cpp.obj: CMakeFiles/MGGPP.dir/flags.make
+CMakeFiles/MGGPP.dir/Edge.cpp.obj: ../Edge.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="C:\Users\Maycon Douglas\CLionProjects\MGGPP\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/MGGPP.dir/Edge.cpp.obj"
+	C:\MinGW\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\MGGPP.dir\Edge.cpp.obj -c "C:\Users\Maycon Douglas\CLionProjects\MGGPP\Edge.cpp"
+
+CMakeFiles/MGGPP.dir/Edge.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MGGPP.dir/Edge.cpp.i"
+	C:\MinGW\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "C:\Users\Maycon Douglas\CLionProjects\MGGPP\Edge.cpp" > CMakeFiles\MGGPP.dir\Edge.cpp.i
+
+CMakeFiles/MGGPP.dir/Edge.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MGGPP.dir/Edge.cpp.s"
+	C:\MinGW\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "C:\Users\Maycon Douglas\CLionProjects\MGGPP\Edge.cpp" -o CMakeFiles\MGGPP.dir\Edge.cpp.s
+
 # Object files for target MGGPP
 MGGPP_OBJECTS = \
-"CMakeFiles/MGGPP.dir/main.cpp.obj"
+"CMakeFiles/MGGPP.dir/main.cpp.obj" \
+"CMakeFiles/MGGPP.dir/Graph.cpp.obj" \
+"CMakeFiles/MGGPP.dir/Node.cpp.obj" \
+"CMakeFiles/MGGPP.dir/Edge.cpp.obj"
 
 # External object files for target MGGPP
 MGGPP_EXTERNAL_OBJECTS =
 
 MGGPP.exe: CMakeFiles/MGGPP.dir/main.cpp.obj
+MGGPP.exe: CMakeFiles/MGGPP.dir/Graph.cpp.obj
+MGGPP.exe: CMakeFiles/MGGPP.dir/Node.cpp.obj
+MGGPP.exe: CMakeFiles/MGGPP.dir/Edge.cpp.obj
 MGGPP.exe: CMakeFiles/MGGPP.dir/build.make
 MGGPP.exe: CMakeFiles/MGGPP.dir/linklibs.rsp
 MGGPP.exe: CMakeFiles/MGGPP.dir/objects1.rsp
 MGGPP.exe: CMakeFiles/MGGPP.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="C:\Users\Maycon Douglas\CLionProjects\MGGPP\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable MGGPP.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="C:\Users\Maycon Douglas\CLionProjects\MGGPP\cmake-build-debug\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable MGGPP.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\MGGPP.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

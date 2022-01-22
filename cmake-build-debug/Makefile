@@ -128,6 +128,78 @@ MGGPP/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MGGPP.dir\build.make CMakeFiles/MGGPP.dir/build
 .PHONY : MGGPP/fast
 
+Edge.obj: Edge.cpp.obj
+.PHONY : Edge.obj
+
+# target to build an object file
+Edge.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MGGPP.dir\build.make CMakeFiles/MGGPP.dir/Edge.cpp.obj
+.PHONY : Edge.cpp.obj
+
+Edge.i: Edge.cpp.i
+.PHONY : Edge.i
+
+# target to preprocess a source file
+Edge.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MGGPP.dir\build.make CMakeFiles/MGGPP.dir/Edge.cpp.i
+.PHONY : Edge.cpp.i
+
+Edge.s: Edge.cpp.s
+.PHONY : Edge.s
+
+# target to generate assembly for a file
+Edge.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MGGPP.dir\build.make CMakeFiles/MGGPP.dir/Edge.cpp.s
+.PHONY : Edge.cpp.s
+
+Graph.obj: Graph.cpp.obj
+.PHONY : Graph.obj
+
+# target to build an object file
+Graph.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MGGPP.dir\build.make CMakeFiles/MGGPP.dir/Graph.cpp.obj
+.PHONY : Graph.cpp.obj
+
+Graph.i: Graph.cpp.i
+.PHONY : Graph.i
+
+# target to preprocess a source file
+Graph.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MGGPP.dir\build.make CMakeFiles/MGGPP.dir/Graph.cpp.i
+.PHONY : Graph.cpp.i
+
+Graph.s: Graph.cpp.s
+.PHONY : Graph.s
+
+# target to generate assembly for a file
+Graph.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MGGPP.dir\build.make CMakeFiles/MGGPP.dir/Graph.cpp.s
+.PHONY : Graph.cpp.s
+
+Node.obj: Node.cpp.obj
+.PHONY : Node.obj
+
+# target to build an object file
+Node.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MGGPP.dir\build.make CMakeFiles/MGGPP.dir/Node.cpp.obj
+.PHONY : Node.cpp.obj
+
+Node.i: Node.cpp.i
+.PHONY : Node.i
+
+# target to preprocess a source file
+Node.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MGGPP.dir\build.make CMakeFiles/MGGPP.dir/Node.cpp.i
+.PHONY : Node.cpp.i
+
+Node.s: Node.cpp.s
+.PHONY : Node.s
+
+# target to generate assembly for a file
+Node.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MGGPP.dir\build.make CMakeFiles/MGGPP.dir/Node.cpp.s
+.PHONY : Node.cpp.s
+
 main.obj: main.cpp.obj
 .PHONY : main.obj
 
@@ -161,6 +233,15 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... MGGPP
+	@echo ... Edge.obj
+	@echo ... Edge.i
+	@echo ... Edge.s
+	@echo ... Graph.obj
+	@echo ... Graph.i
+	@echo ... Graph.s
+	@echo ... Node.obj
+	@echo ... Node.i
+	@echo ... Node.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

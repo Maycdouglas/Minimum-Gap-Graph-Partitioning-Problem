@@ -1,5 +1,5 @@
-#ifndef TEORIAGRAFOS_EDGE_H
-#define TEORIAGRAFOS_EDGE_H
+#ifndef MGGPP_EDGE_H
+#define MGGPP_EDGE_H
 using namespace std;
 
 // Definition of the Edge class
@@ -42,4 +42,4 @@ public:
 
 
 };
-#endif //TEORIAGRAFOS_EDGE_H
+#endif //MGGPP_EDGE_H

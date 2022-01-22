@@ -8,6 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
+  "C:/Users/Maycon Douglas/CLionProjects/MGGPP/Edge.cpp" "C:/Users/Maycon Douglas/CLionProjects/MGGPP/cmake-build-debug/CMakeFiles/MGGPP.dir/Edge.cpp.obj"
+  "C:/Users/Maycon Douglas/CLionProjects/MGGPP/Graph.cpp" "C:/Users/Maycon Douglas/CLionProjects/MGGPP/cmake-build-debug/CMakeFiles/MGGPP.dir/Graph.cpp.obj"
+  "C:/Users/Maycon Douglas/CLionProjects/MGGPP/Node.cpp" "C:/Users/Maycon Douglas/CLionProjects/MGGPP/cmake-build-debug/CMakeFiles/MGGPP.dir/Node.cpp.obj"
   "C:/Users/Maycon Douglas/CLionProjects/MGGPP/main.cpp" "C:/Users/Maycon Douglas/CLionProjects/MGGPP/cmake-build-debug/CMakeFiles/MGGPP.dir/main.cpp.obj"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")

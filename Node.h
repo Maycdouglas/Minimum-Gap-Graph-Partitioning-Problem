@@ -1,5 +1,5 @@
-#ifndef TEORIAGRAFOS_NODE_H
-#define TEORIAGRAFOS_NODE_H
+#ifndef MGGPP_NODE_H
+#define MGGPP_NODE_H
 #include "Edge.h" // Include of the Edge class
 
 using namespace std;
@@ -51,4 +51,4 @@ public:
     // Auxiliar methods
 
 };
-#endif //TEORIAGRAFOS_NODE_H
+#endif //MGGPP_NODE_H

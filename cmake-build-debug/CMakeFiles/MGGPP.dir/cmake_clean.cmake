@@ -1,4 +1,7 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/MGGPP.dir/Edge.cpp.obj"
+  "CMakeFiles/MGGPP.dir/Graph.cpp.obj"
+  "CMakeFiles/MGGPP.dir/Node.cpp.obj"
   "CMakeFiles/MGGPP.dir/main.cpp.obj"
   "MGGPP.exe"
   "MGGPP.exe.manifest"

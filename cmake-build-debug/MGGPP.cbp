@@ -80,6 +80,24 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/Maycon Douglas/CLionProjects/MGGPP/Edge.cpp">
+			<Option target="MGGPP"/>
+		</Unit>
+		<Unit filename="C:/Users/Maycon Douglas/CLionProjects/MGGPP/Edge.h">
+			<Option target="MGGPP"/>
+		</Unit>
+		<Unit filename="C:/Users/Maycon Douglas/CLionProjects/MGGPP/Graph.cpp">
+			<Option target="MGGPP"/>
+		</Unit>
+		<Unit filename="C:/Users/Maycon Douglas/CLionProjects/MGGPP/Graph.h">
+			<Option target="MGGPP"/>
+		</Unit>
+		<Unit filename="C:/Users/Maycon Douglas/CLionProjects/MGGPP/Node.cpp">
+			<Option target="MGGPP"/>
+		</Unit>
+		<Unit filename="C:/Users/Maycon Douglas/CLionProjects/MGGPP/Node.h">
+			<Option target="MGGPP"/>
+		</Unit>
 		<Unit filename="C:/Users/Maycon Douglas/CLionProjects/MGGPP/main.cpp">
 			<Option target="MGGPP"/>
 		</Unit>

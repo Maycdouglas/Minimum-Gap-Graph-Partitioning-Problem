@@ -1,6 +1,6 @@
 
-#ifndef TEORIAGRAFOS_GRAPH_H
-#define TEORIAGRAFOS_GRAPH_H
+#ifndef MGGPP_GRAPH_H
+#define MGGPP_GRAPH_H
 #include "Node.h"
 #include "Edge.h" // Include of the Edge class
 #include <fstream>
@@ -44,23 +44,6 @@ public:
     Node* getNodeByRotulo(int id);
 
     //Nossos Metodos
-    string buscaEmLargura(int id);
-    string fechoTransitivoDireto(int id);
-    void fechoTransitivoDiretoAux(int id, bool *verticesVisitados);
-    string fechoTransitivoIndireto(int idRotulo);
-    void fechoTransitivoIndiretoAux(int idNoOrigem, int idNoAlvo, bool *verticesVisitados, bool *fechoTransitivoIndireto, bool *alcanca);
-    void gerarSubgrafoVerticeInduzido(string *grafo, string *arestaDOT, int idRotulo, bool *verticesVisitados);
-    bool visitou(int id, bool *verticesVisitados);
-    string dijkstra(int idRotuloInicial, int idRotuloFinal);
-    string gerarCaminhoMinimo(Node **vetorPais, Node *noInicial, Node *noFinal);
-    int extrairIdMenorCustoDisponivel(float *vetorCustos, list<int> *listaVerticesDisponiveis);
-    bool estaNaLista(int idTarget, list<int> *listaVerticesDisponiveis);
-    void retirarElementoLista(list<int> *listaVerticesDisponiveis, int verticeMenorCaminhoAtual);
-    string floyd(int idRotuloInicial, int idRotuloFinal );
-    string gerarCaminhoMinimoFloyd(list<int> *caminho, float *matrizVertices);
-    Graph* kruskal(int *subconjuntoVertices, int qntdVertices);
-    void ordenarArestasOrdemCrescente(Graph *arvore, queue<Edge*> *filaArestas, queue<Edge*> *filaArestasAux);
-    bool estaNaMesmaSubarvore(int *vertices, int idOrigem, int idAlvo);
     void montarCabecalhoGrafoDOT(string *grafo, string *arestaDOT);
     void montarArestaGrafoDOT(string *grafo, string *arestaDOT, int idRotuloNoAtual, int idRotuloNoAlvo, float pesoAresta, bool retorno);
 
@@ -68,4 +51,4 @@ private:
     //Auxiliar methods
 
 };
-#endif //TEORIAGRAFOS_GRAPH_H
+#endif //MGGPP_GRAPH_H
