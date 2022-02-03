@@ -46,7 +46,11 @@ public:
     //Nossos Metodos
     void montarCabecalhoGrafoDOT(string *grafo, string *arestaDOT);
     void montarArestaGrafoDOT(string *grafo, string *arestaDOT, int idRotuloNoAtual, int idRotuloNoAlvo, float pesoAresta, bool retorno);
-
+    void ordenarCrescentementeNosPorPeso();
+    void ordenarDecrescentementeNosPorGrau();
+    void algoritmoGuloso(int cluster);
+    void algoritmoGulosoRandomizado(int cluster);
+    void algoritmoGulosoRandomizadoReativo(int cluster);
 private:
     //Auxiliar methods
 

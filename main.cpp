@@ -78,13 +78,12 @@ Graph* leituraInstancia(ifstream& input_file, int directed, int weightedEdge, in
     return graph;
 }
 
-Graph* leituraInstancia2(ifstream& input_file, int directed, int weightedEdge, int weightedNode){
+Graph* leituraInstancia2(ifstream& input_file, int directed, int weightedEdge, int weightedNode, int *cluster){
 
     //Variaveis para auxiliar na criacao dos nos no Grafo
     int idNodeSource;
     int idNodeTarget;
     int order;
-    int cluster;
     string descarte;
     string descarte2;
     int contador = 0;
@@ -101,8 +100,8 @@ Graph* leituraInstancia2(ifstream& input_file, int directed, int weightedEdge, i
 
     while(contador < 10){
         if(contador == 3){
-            input_file >> cluster;
-            cout << cluster << endl;
+            input_file >> *cluster;
+            cout << *cluster << endl;
         } else {
             input_file >> descarte;
             cout << descarte << endl;
@@ -206,7 +205,7 @@ int menu(){
 
 }
 
-void selecionar(int selecao, Graph* graph, ofstream& output_file){
+void selecionar(int selecao, Graph* graph, ofstream& output_file, int cluster){
 
     switch (selecao) {
 
@@ -233,18 +232,21 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
         //Algoritmo Guloso
         case 2:{
             cout << "Caso 2" << endl;
+            graph->algoritmoGuloso(cluster);
             break;
         }
 
         //Algoritmo Guloso Randomizado
         case 3:{
             cout << "Caso 3" << endl;
+            graph->algoritmoGulosoRandomizado(cluster);
             break;
         }
 
         //Algoritmo Guloso Randomizado Reativo
         case 4:{
             cout << "Caso 4" << endl;
+            graph->algoritmoGulosoRandomizadoReativo(cluster);
             break;
         }
 
@@ -256,7 +258,7 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
     }
 }
 
-int mainMenu(ofstream& output_file, Graph* graph){
+int mainMenu(ofstream& output_file, Graph* graph, int cluster){
 
     int selecao = 1;
 
@@ -266,7 +268,7 @@ int mainMenu(ofstream& output_file, Graph* graph){
 
         if(selecao != 0){
             if(output_file.is_open())
-                selecionar(selecao, graph, output_file);
+                selecionar(selecao, graph, output_file, cluster);
 
             else
                 cout << "Unable to open the output_file" << endl;
@@ -306,16 +308,17 @@ int main(int argc, char const *argv[]) {
     output_file.open(argv[2], ios::out | ios::trunc);
 
     Graph* graph;
+    int cluster;
 
     if(input_file.is_open()){
 
-        graph = leituraInstancia2(input_file, atoi(argv[3]), atoi(argv[4]), atoi(argv[5]));
+        graph = leituraInstancia2(input_file, atoi(argv[3]), atoi(argv[4]), atoi(argv[5]), &cluster);
 
     }else
         cout << "Unable to open " << argv[1];
 
 
-    mainMenu(output_file, graph);
+    mainMenu(output_file, graph, cluster);
 
     //Fechando arquivo de entrada
     input_file.close();

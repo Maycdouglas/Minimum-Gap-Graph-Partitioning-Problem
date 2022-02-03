@@ -8,6 +8,34 @@
 
 C:/Users/Maycon Douglas/CLionProjects/MGGPP/Edge.h
 
+C:/Users/Maycon Douglas/CLionProjects/MGGPP/Graph.cpp
+Graph.h
+C:/Users/Maycon Douglas/CLionProjects/MGGPP/Graph.h
+Node.h
+C:/Users/Maycon Douglas/CLionProjects/MGGPP/Node.h
+Edge.h
+C:/Users/Maycon Douglas/CLionProjects/MGGPP/Edge.h
+iostream
+-
+fstream
+-
+stack
+-
+queue
+-
+list
+-
+cmath
+-
+cstdlib
+-
+ctime
+-
+cfloat
+-
+iomanip
+-
+
 C:/Users/Maycon Douglas/CLionProjects/MGGPP/Graph.h
 Node.h
 C:/Users/Maycon Douglas/CLionProjects/MGGPP/Node.h

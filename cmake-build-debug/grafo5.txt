@@ -1,7 +1,7 @@
 # grafo5.txt
 
-# 5 cluster
-param p := 5 ;
+# 2 cluster
+param p := 2 ;
 
 # 5 vertici
 set V := 

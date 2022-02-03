@@ -257,6 +257,32 @@ void Graph::montarArestaGrafoDOT(string *grafo, string *arestaDOT, int idRotuloN
     *grafo += "]\n";
 }
 
+void Graph::ordenarCrescentementeNosPorPeso(){
+    cout << "Ordenar por Peso" << endl;
+}
+
+void Graph::ordenarDecrescentementeNosPorGrau(){
+    cout << "Ordenar por Grau" << endl;
+}
+
+void Graph::algoritmoGuloso(int cluster) {
+    cout << "Algoritmo Guloso" << endl;
+    cout << "CLUSTER: " << cluster << endl;
+    ordenarCrescentementeNosPorPeso();
+}
+
+void Graph::algoritmoGulosoRandomizado(int cluster) {
+    cout << "Algoritmo Guloso Randomizado" << endl;
+    cout << "CLUSTER: " << cluster << endl;
+    ordenarCrescentementeNosPorPeso();
+}
+
+void Graph::algoritmoGulosoRandomizadoReativo(int cluster) {
+    cout << "Algoritmo Guloso Randomizado Reativo" << endl;
+    cout << "CLUSTER: " << cluster << endl;
+    ordenarCrescentementeNosPorPeso();
+}
+
 
 
 
