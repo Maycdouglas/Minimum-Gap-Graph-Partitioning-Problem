@@ -139,7 +139,7 @@ void Graph::insertEdge(int id_rotulo, int target_id_rotulo, float weight)
     {
         // uma aresta auxiliar é adicionada entre os dois nós para o percurso inverso ser possível
 //        Node *noAux = getNode(target_id);
-        noFinal->insertEdge(id, weight, target_id, true, target_id_rotulo, id_rotulo);
+        noFinal->insertEdge(id, weight, target_id, true, id_rotulo, target_id_rotulo);
 
         getNode(id)->incrementOutDegree();
         getNode(id)->incrementInDegree();

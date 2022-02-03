@@ -3,7 +3,7 @@
 # 5 cluster
 param p := 5 ;
 
-# 100 vertici
+# 5 vertici
 set V := 
  1 2 3 4 5
 ;

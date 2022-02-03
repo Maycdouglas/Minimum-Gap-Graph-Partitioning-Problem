@@ -36,7 +36,7 @@ public:
     Node* getFirstNode();
     Node* getLastNode();
     //Other methods
-    void insertNode(int id, float peso);
+    void insertNode(int id_rotulo, float peso);
     void insertEdge(int id_rotulo, int target_id_rotulo, float weight);
     void removeNode(int id);
     bool searchNode(int id);

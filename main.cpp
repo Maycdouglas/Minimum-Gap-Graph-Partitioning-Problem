@@ -32,19 +32,10 @@ void exportarGrafo(Graph* graph, ofstream& output_file) {
     while(noAtual != nullptr){
         arestaAtual = noAtual->getFirstEdge();
         while (arestaAtual != nullptr) {
-            grafo += "\t" + to_string(noAtual->getIdRotulo()) + arestaDOT + to_string(arestaAtual->getTargetIdRotulo());
-            if(graph->getWeightedEdge()){
-                grafo += " [weight = " + to_string(arestaAtual->getWeight());
-                grafo += ", label = " + to_string(arestaAtual->getWeight());
-                if (arestaAtual->getVermelho()) {
-                    grafo += ", color = red";
-                }
-            } else{
-                if (arestaAtual->getVermelho()) {
-                    grafo += " [color = red";
-                }
+            if(!arestaAtual->getRetorno()){
+                grafo += "\t" + to_string(noAtual->getIdRotulo()) + arestaDOT + to_string(arestaAtual->getTargetIdRotulo());
+                grafo += "\n";
             }
-            grafo += "]\n";
             arestaAtual = arestaAtual->getNextEdge();
         }
         noAtual = noAtual->getNextNode();
@@ -87,6 +78,116 @@ Graph* leituraInstancia(ifstream& input_file, int directed, int weightedEdge, in
     return graph;
 }
 
+Graph* leituraInstancia2(ifstream& input_file, int directed, int weightedEdge, int weightedNode){
+
+    //Variaveis para auxiliar na criacao dos nos no Grafo
+    int idNodeSource;
+    int idNodeTarget;
+    int order;
+    int cluster;
+    string descarte;
+    string descarte2;
+    int contador = 0;
+    float nodeWeight;
+    int numEdges;
+    string aresta;
+    string idOrigem;
+    string idAlvo;
+    int posicaoVirgula;
+    int posicaoParanteses;
+
+    //Criando o grafo
+    Graph* graph = new Graph(0, directed, weightedEdge, weightedNode);
+
+    while(contador < 10){
+        if(contador == 3){
+            input_file >> cluster;
+            cout << cluster << endl;
+        } else {
+            input_file >> descarte;
+            cout << descarte << endl;
+        }
+        contador++;
+    }
+
+    contador = 0;
+
+    cout << "=====" << endl;
+
+    while(contador < 6){
+        if(contador == 1){
+            cout << "ORDER:" << endl;
+            input_file >> order;
+            cout << order << endl;
+        } else {
+            input_file >> descarte;
+            cout << descarte << endl;
+        }
+        contador++;
+    }
+
+    contador = 0;
+
+    while(contador < order){
+        input_file >> idNodeSource;
+        cout << idNodeSource << endl;
+        contador++;
+    }
+
+    contador = 0;
+
+    while(contador < 4) {
+        input_file >> descarte;
+        cout << descarte << endl;
+        contador++;
+    }
+
+    contador = 0;
+
+    while(contador < order){
+        input_file >> idNodeSource >> nodeWeight;
+        graph->insertNode(idNodeSource,nodeWeight);
+        contador++;
+    }
+
+    cout << "A ordem do grafo eh: " << graph->getOrder() << endl;
+
+    contador = 0;
+
+    while(contador < 7){
+        if(contador == 2){
+            cout << "NUMERO DE ARESTAS:" << endl;
+            input_file >> numEdges;
+            cout << numEdges << endl;
+        } else {
+            input_file >> descarte;
+            cout << descarte << endl;
+        }
+        contador++;
+    }
+
+    contador = 0;
+
+    while(contador < numEdges){
+        input_file >> aresta;
+        posicaoParanteses = aresta.find(")");
+        posicaoVirgula = aresta.find(",");
+        cout << posicaoParanteses << endl;
+        cout << posicaoVirgula << endl;
+        cout << aresta << endl;
+        idNodeSource = stoi(aresta.substr(1,posicaoVirgula - 1));
+        cout << idNodeSource << endl;
+        idNodeTarget = stoi(aresta.substr(posicaoVirgula + 1,posicaoParanteses - posicaoVirgula - 1));
+        cout << idNodeTarget << endl;
+
+        graph->insertEdge(idNodeSource,idNodeTarget,0);
+
+        contador++;
+    }
+
+    return graph;
+}
+
 int menu(){
 
     int selecao;
@@ -94,12 +195,9 @@ int menu(){
     cout << "MENU" << endl;
     cout << "----" << endl;
     cout << "[1] Gerar grafo" << endl;
-    cout << "[2] Busca em Largura" << endl;
-    cout << "[3] Fecho Transitivo Direto" << endl;
-    cout << "[4] Fecho Transitivo Indireto" << endl;
-    cout << "[5] Dijkstra" << endl;
-    cout << "[6] Floyd" << endl;
-    cout << "[7] Kruskal" << endl;
+    cout << "[2] Algoritmo Guloso" << endl;
+    cout << "[3] Algoritmo Guloso Randomizado" << endl;
+    cout << "[4] Algoritmo Guloso Randomizado Reativo" << endl;
     cout << "[0] Sair" << endl;
 
     cin >> selecao;
@@ -112,75 +210,41 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file){
 
     switch (selecao) {
 
-        //Fecho Transitivo Direto
+        //Gerar Grafo
         case 1:{
-            int idRotulo;
-            cout << "Insira o ID do Noh: ";
-            cin >> idRotulo;
-            output_file << graph->fechoTransitivoDireto(idRotulo);
-            break;
-        }
-        //Fecho Transitivo Indireto
-        case 2:{
-            int idRotulo;
-            cout << "Insira o ID do Noh: ";
-            cin >> idRotulo;
-            output_file << graph->fechoTransitivoIndireto(idRotulo);
-            break;
+            cout << "Caso 1" << endl;
+            Node *noAtual = graph->getFirstNode();
+            Edge *arestaAtual;
+            cout << "A ordem do grafo eh: " << graph->getOrder() << endl;
+            while(noAtual != nullptr ){
 
-        }
-
-        //Dijkstra
-        case 3:{
-            int idRotuloInicial, idRotuloFinal;
-            cout << "Insira o ID do Noh Inicial: ";
-            cin >> idRotuloInicial;
-            cout << "\nInsira o ID do Noh Final: ";
-            cin >> idRotuloFinal;
-            output_file << graph->dijkstra(idRotuloInicial,idRotuloFinal);
-            break;
-        }
-
-        //Floyd
-        case 4:{
-            int idRotuloInicial, idRotuloFinal;
-            cout << "Insira o ID do Noh Inicial: ";
-            cin >> idRotuloInicial;
-            cout << "\nInsira o ID do Noh Final: ";
-            cin >> idRotuloFinal;
-            output_file << graph->floyd(idRotuloInicial,idRotuloFinal);
-            break;
-        }
-
-        //Kruskal
-        case 5:{
-            int subconjuntoVertices[graph->getOrder()];
-            int qntdVertices;
-            int vertice;
-            cout << "Insira a quantidade de vertices presentes no seu subconjunto: ";
-            cin >> qntdVertices;
-            Graph *arvore;
-
-            if(qntdVertices > 1){
-                for(int i = 0; i < qntdVertices; i++){
-                    cin >> subconjuntoVertices[i];
+                cout << "Estou no no: " << noAtual->getIdRotulo() << endl;
+                arestaAtual = noAtual->getFirstEdge();
+                while(arestaAtual != nullptr){
+                    cout << "Estou na aresta com origem " << arestaAtual->getOriginIdRotulo() << " e alvo " << arestaAtual->getTargetIdRotulo() << endl;
+                    arestaAtual = arestaAtual->getNextEdge();
                 }
-                arvore = graph->kruskal(subconjuntoVertices,qntdVertices);
-                if(arvore != nullptr){
-                    exportarGrafo(arvore, output_file);
-                }
-            } else {
-                cout << "Quantidade de vértices inválida! Insira 2 ou mais vértices." << endl;
+                noAtual = noAtual->getNextNode();
             }
+
+            exportarGrafo(graph,output_file);
+            break;
+        }
+        //Algoritmo Guloso
+        case 2:{
+            cout << "Caso 2" << endl;
             break;
         }
 
-        //Busca em Largura
-        case 6:{
-            int idRotulo;
-            cout << "Insira o ID do Noh: ";
-            cin >> idRotulo;
-            output_file << graph->buscaEmLargura(idRotulo);
+        //Algoritmo Guloso Randomizado
+        case 3:{
+            cout << "Caso 3" << endl;
+            break;
+        }
+
+        //Algoritmo Guloso Randomizado Reativo
+        case 4:{
+            cout << "Caso 4" << endl;
             break;
         }
 
@@ -245,7 +309,7 @@ int main(int argc, char const *argv[]) {
 
     if(input_file.is_open()){
 
-        graph = leituraInstancia(input_file, atoi(argv[3]), atoi(argv[4]), atoi(argv[5]));
+        graph = leituraInstancia2(input_file, atoi(argv[3]), atoi(argv[4]), atoi(argv[5]));
 
     }else
         cout << "Unable to open " << argv[1];
