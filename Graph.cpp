@@ -259,16 +259,81 @@ void Graph::montarArestaGrafoDOT(string *grafo, string *arestaDOT, int idRotuloN
 
 void Graph::ordenarCrescentementeNosPorPeso(){
     cout << "Ordenar por Peso" << endl;
+    list<int> listaCrescrenteNosPorPeso; //Lista que armazena os ID's ROTULO dos Vertices
+    Node *noAtual = first_node;
+    Node *noLista, *noFinalLista;
+
+    listaCrescrenteNosPorPeso.push_back(noAtual->getIdRotulo()); //Insere o primeiro nó na lista
+    noAtual = noAtual->getNextNode();
+
+    //Loop que percorre os nós do grafo
+    while(noAtual != nullptr){
+        noFinalLista = getNodeByRotulo(listaCrescrenteNosPorPeso.back());
+        //Loop que percorre a lista de Nós
+        for(auto it = listaCrescrenteNosPorPeso.begin(); it!=listaCrescrenteNosPorPeso.end(); it++){
+            noLista = getNodeByRotulo(*it);
+            //Condição que permite inserir o nó automaticamente no final da lista caso o seu peso seja acima do ultimo elemento
+            if(noAtual->getWeight() >= noFinalLista->getWeight()){
+                listaCrescrenteNosPorPeso.push_back(noAtual->getIdRotulo());
+                break;
+            } else if(noAtual->getWeight() < noLista->getWeight()){
+                listaCrescrenteNosPorPeso.insert(it,noAtual->getIdRotulo());
+                break;
+            }
+        }
+        noAtual = noAtual->getNextNode();
+    }
+
+    cout << "Lista Crescente por Peso: " << endl;
+
+    //Imprime a lista para verificarmos se está ordenando corretamente. NÃO ESTARÁ PRESENTE NO TRABALHO FINAL!
+    for(auto it = listaCrescrenteNosPorPeso.begin(); it!=listaCrescrenteNosPorPeso.end(); it++){
+        cout << *it << " ";
+    }
+    cout << endl;
 }
 
 void Graph::ordenarDecrescentementeNosPorGrau(){
     cout << "Ordenar por Grau" << endl;
+    list<int> listaDecrescrenteNosPorGrau; //Lista que armazena os ID's ROTULO dos Vertices
+    Node *noAtual = first_node;
+    Node *noLista, *noFinalLista;
+
+    listaDecrescrenteNosPorGrau.push_back(noAtual->getIdRotulo()); //Insere o primeiro nó na lista
+    noAtual = noAtual->getNextNode();
+
+    //Loop que percorre os nós do grafo
+    while(noAtual != nullptr){
+        noFinalLista = getNodeByRotulo(listaDecrescrenteNosPorGrau.back());
+        //Loop que percorre a lista de Nós
+        for(auto it = listaDecrescrenteNosPorGrau.begin(); it!=listaDecrescrenteNosPorGrau.end(); it++){
+            noLista = getNodeByRotulo(*it);
+            //Condição que permite inserir o nó automaticamente no final da lista caso o seu grau seja abaixo do ultimo elemento
+            if(noAtual->getOutDegree() <= noFinalLista->getOutDegree()){
+                listaDecrescrenteNosPorGrau.push_back(noAtual->getIdRotulo());
+                break;
+            } else if(noAtual->getOutDegree() > noLista->getOutDegree()){
+                listaDecrescrenteNosPorGrau.insert(it,noAtual->getIdRotulo());
+                break;
+            }
+        }
+        noAtual = noAtual->getNextNode();
+    }
+
+    cout << "Lista Decrescente por grau: " << endl;
+
+    //Imprime a lista para verificarmos se está ordenando corretamente. NÃO ESTARÁ PRESENTE NO TRABALHO FINAL!
+    for(auto it = listaDecrescrenteNosPorGrau.begin(); it != listaDecrescrenteNosPorGrau.end(); it++){
+        cout << *it << " ";
+    }
+    cout << endl;
 }
 
 void Graph::algoritmoGuloso(int cluster) {
     cout << "Algoritmo Guloso" << endl;
     cout << "CLUSTER: " << cluster << endl;
     ordenarCrescentementeNosPorPeso();
+    ordenarDecrescentementeNosPorGrau();
 }
 
 void Graph::algoritmoGulosoRandomizado(int cluster) {
