@@ -51,6 +51,7 @@ public:
     void algoritmoGuloso(int cluster);
     void algoritmoGulosoRandomizado(int cluster);
     void algoritmoGulosoRandomizadoReativo(int cluster);
+    float** floyd(int idRotuloInicial, int idRotuloFinal );
 private:
     //Auxiliar methods
 

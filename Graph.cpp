@@ -465,6 +465,97 @@ void Graph::algoritmoGulosoRandomizadoReativo(int cluster) {
     ordenarCrescentementeNosPorPeso(&listaCrescrenteNosPorPeso);
 }
 
+float** Graph::floyd(int idRotuloInicial, int idRotuloFinal ){
+
+    float matrizVertices[this->order][this->order];
+    Node *noAtual, *noAlvo, *noInicial = getNodeByRotulo(idRotuloInicial), *noFinal = getNodeByRotulo(idRotuloFinal);
+    Edge *arestaAtual;
+    int linha, coluna, idInicial = noInicial->getId(), idFinal = noFinal->getId();
+    list <int> caminho;
+    list<int>::iterator it;
+
+    //Clausula de segurança para grafos que não possuem peso nas arestas
+    if(!this->getWeightedEdge()){
+        cout << "O grafo precisa ter peso nas arestas!" << endl;
+        return nullptr;
+    }
+
+    //Clausula de segurança para nós que não existem no grafo
+    if(noInicial == nullptr || noFinal == nullptr){
+        cout << "O no escolhido nao esta presente no grafo!" << endl;
+        return nullptr;
+    }
+
+    //Clausula de segurança para nós que não possuem Out Degree
+    if(noInicial->getOutDegree() < 1){
+        cout << "O no escolhido possui grau de saida igual a zero!" << endl;
+        return nullptr;
+    }
+
+    //Loop responsável por montar a matriz inicial
+    for(linha = 0; linha < this->order; linha++) {
+        noAtual = getNode(linha + 1);
+        for(coluna = 0; coluna < this->order; coluna++) {
+            noAlvo = getNode(coluna + 1);
+            if(linha == coluna) {  //responsável por colocar o valor 0 na distância entre o vértice e ele mesmo
+                matrizVertices[linha][coluna] = 0;
+            } else if(noAtual->searchEdge(noAlvo->getId())){ //verifica se existe uma aresta entre os dois vertices
+                arestaAtual = noAtual->hasEdgeBetween(noAlvo->getId());
+                //Clausula de segurança para caso exista aresta com peso negativo
+                if(arestaAtual->getWeight() < 0){
+                    cout << "Algoritmo interrompido por ter aresta com peso negativo!" << endl;
+                    return nullptr;
+                }
+
+                matrizVertices[linha][coluna] = arestaAtual->getWeight(); //insere a distancia entre os dois vertices na matriz
+
+                //caso exista aresta entre o nó inicial e o nó final, a lista caminho é atualizada
+                if(linha == idInicial - 1 && coluna == idFinal - 1){
+                    caminho.push_front(idInicial);
+                    caminho.push_back(idFinal);
+                }
+            } else {
+                matrizVertices[linha][coluna] = INFINITY; //quando não houver arestas entre os vértices, o valor INFINITO é usado
+            }
+        }
+    }
+
+
+    //Loop responsável por atualizar a matriz com os caminhos obtidos
+    for(int k = 0; k < this->order; k++) {
+        for(linha = 0; linha < this->order; linha++) {
+            noAtual = getNode(linha + 1);
+            for(coluna = 0; coluna < this->order; coluna++) {
+                noAlvo = getNode(coluna + 1);
+                //verifica se os indices da matriz são diferentes entre si para poderem ser atualizados se possível
+                if(linha != k && coluna != k && linha != coluna){
+                    //verifica se o vértice não está numa linha ou coluna que é impossível sofrer alterações no momento
+                    if(matrizVertices[linha][k] != INFINITY && matrizVertices[k][coluna] != INFINITY){
+                        //verifica se o caminho atual na matriz é maior que o novo caminho proposto
+                        if(matrizVertices[linha][coluna] > matrizVertices[linha][k] + matrizVertices[k][coluna]){
+                            matrizVertices[linha][coluna] = matrizVertices[linha][k] + matrizVertices[k][coluna];
+                            //verifica se atualizou o caminho entre os nós escolhidos pelo usuario
+                            if(linha == idInicial - 1 && coluna == idFinal - 1){
+                                //se o caminho estiver vazio, realiza a primeira inserção
+                                if(caminho.empty()){
+                                    caminho.push_front(k + 1);
+                                    caminho.push_back(idFinal);
+                                } else{
+                                    it = caminho.end();
+                                    it--;
+                                    caminho.insert(it,k + 1); //adiciona o novo vertice no caminho na penultima posição
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return matrizVertices;
+}
+
 
 
 
