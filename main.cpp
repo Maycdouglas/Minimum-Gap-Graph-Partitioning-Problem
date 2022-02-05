@@ -167,7 +167,10 @@ Graph* leituraInstancia2(ifstream& input_file, int directed, int weightedEdge, i
 
     contador = 0;
 
-    while(contador < numEdges){
+    cout << "Numero de arestas: " << numEdges << endl;
+
+    while(contador < numEdges/2){
+        cout << "CONTADOR = " << contador << endl;
         input_file >> aresta;
         posicaoParanteses = aresta.find(")");
         posicaoVirgula = aresta.find(",");

@@ -390,15 +390,12 @@ void Graph::algoritmoGuloso(int cluster) {
     bool semDiferenca, atualizouMenor, atualizouMaior;
 
     while(!listaDecrescrenteNosPorGrau.empty()){
-        cout << "Chegou aqui 1" << endl;
         noAtual = getNodeByRotulo(listaDecrescrenteNosPorGrau.front());
         menorDiferenca[0] = int(INFINITY);
-        cout << "Chegou aqui 2" << endl;
         semDiferenca = false;
         atualizouMenor = false;
         atualizouMaior = false;
         for(int i = 0; i < cluster; i++){
-            cout << "Chegou aqui 3" << endl;
             pesoNoLeve = matrizMenorMaiorCluster[i][0];
             pesoNoPesado = matrizMenorMaiorCluster[i][1];
 
@@ -434,10 +431,9 @@ void Graph::algoritmoGuloso(int cluster) {
         }
         matrizMenorMaiorCluster[menorDiferenca[1]][2] = matrizMenorMaiorCluster[menorDiferenca[1]][1] - matrizMenorMaiorCluster[menorDiferenca[1]][0];
 
-        cout << "Chegou aqui 4" << endl;
         listaDecrescrenteNosPorGrau.pop_front();
     }
-    cout << "Chegou aqui 5" << endl;
+
     for(int i = 0; i < cluster; i++){
         cout << "Membros do Cluster " << i+1 << endl;
         for(auto it = matrizCluster[i][0].begin(); it != matrizCluster[i][0].end(); it++){
