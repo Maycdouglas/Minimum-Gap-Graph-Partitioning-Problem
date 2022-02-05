@@ -337,7 +337,7 @@ void Graph::algoritmoGuloso(int cluster) {
     ordenarDecrescentementeNosPorGrau(&listaDecrescrenteNosPorGrau);
 
     list<int> matrizCluster[cluster][1]; //As linhas correspondem aos clusters. A primeira coluna é a lista de vertices do cluster, a segunda coluna é o menor peso e terceira coluna o maior peso
-    int matrizMenorMaiorCluster[cluster][2];
+    int matrizMenorMaiorCluster[cluster][3];
     float pontoCorte = float(this->order) / float(cluster);
 
     cout << "Ponto de corte: " << pontoCorte << endl;
@@ -362,6 +362,7 @@ void Graph::algoritmoGuloso(int cluster) {
                 matrizCluster[contadorLinhaMatriz][0].push_back(*it);
                 matrizMenorMaiorCluster[contadorLinhaMatriz][0] = getNodeByRotulo(*it)->getWeight();
                 matrizMenorMaiorCluster[contadorLinhaMatriz][1] = getNodeByRotulo(*it)->getWeight();
+                matrizMenorMaiorCluster[contadorLinhaMatriz][2] = matrizMenorMaiorCluster[contadorLinhaMatriz][1] - matrizMenorMaiorCluster[contadorLinhaMatriz][0];
                 cout << "Inseriu o numero " << *it << " no cluster " << contadorLinhaMatriz + 1 << endl;
                 cout << "Novo menor: " << matrizMenorMaiorCluster[contadorLinhaMatriz][0] << " Novo maior: " << matrizMenorMaiorCluster[contadorLinhaMatriz][1] << endl;
                 listaDecrescrenteNosPorGrau.remove(*it);
@@ -372,6 +373,7 @@ void Graph::algoritmoGuloso(int cluster) {
                 matrizCluster[contadorLinhaMatriz][0].push_back(*it);
                 matrizMenorMaiorCluster[contadorLinhaMatriz][0] = getNodeByRotulo(*it)->getWeight();
                 matrizMenorMaiorCluster[contadorLinhaMatriz][1] = getNodeByRotulo(*it)->getWeight();
+                matrizMenorMaiorCluster[contadorLinhaMatriz][2] = matrizMenorMaiorCluster[contadorLinhaMatriz][1] - matrizMenorMaiorCluster[contadorLinhaMatriz][0];
                 cout << "Inseriu o numero " << *it << " no cluster " << contadorLinhaMatriz + 1 << endl;
                 cout << "Novo menor: " << matrizMenorMaiorCluster[contadorLinhaMatriz][0] << " Novo maior: " << matrizMenorMaiorCluster[contadorLinhaMatriz][1] << endl;
                 listaDecrescrenteNosPorGrau.remove(*it);
@@ -380,6 +382,73 @@ void Graph::algoritmoGuloso(int cluster) {
             }
         }
         contadorLista++;
+    }
+
+    Node *noAtual;
+    int pesoNoLeve, pesoNoPesado;
+    int menorDiferenca[2];
+    bool semDiferenca, atualizouMenor, atualizouMaior;
+
+    while(!listaDecrescrenteNosPorGrau.empty()){
+        cout << "Chegou aqui 1" << endl;
+        noAtual = getNodeByRotulo(listaDecrescrenteNosPorGrau.front());
+        menorDiferenca[0] = int(INFINITY);
+        cout << "Chegou aqui 2" << endl;
+        semDiferenca = false;
+        atualizouMenor = false;
+        atualizouMaior = false;
+        for(int i = 0; i < cluster; i++){
+            cout << "Chegou aqui 3" << endl;
+            pesoNoLeve = matrizMenorMaiorCluster[i][0];
+            pesoNoPesado = matrizMenorMaiorCluster[i][1];
+
+            if(noAtual->getWeight() < pesoNoLeve){
+                if(pesoNoPesado - noAtual->getWeight() < menorDiferenca[0]){
+                    menorDiferenca[0] = pesoNoPesado - noAtual->getWeight();
+                    menorDiferenca[1] = i;
+                    atualizouMenor = true;
+                    atualizouMaior = false;
+                }
+            } else if(noAtual->getWeight() > pesoNoPesado){
+                if(noAtual->getWeight() - pesoNoLeve < menorDiferenca[0]){
+                    menorDiferenca[0] = noAtual->getWeight() - pesoNoLeve;
+                    menorDiferenca[1] = i;
+                    atualizouMaior = true;
+                    atualizouMenor = false;
+                }
+            } else {
+                menorDiferenca[0] = 0;
+                menorDiferenca[1] = i;
+                semDiferenca = true;
+                break;
+            }
+        }
+
+        matrizCluster[menorDiferenca[1]][0].push_back(noAtual->getIdRotulo());
+        if(!semDiferenca){
+            if(atualizouMenor){
+                matrizMenorMaiorCluster[menorDiferenca[1]][0] = noAtual->getWeight();
+            } else{
+                matrizMenorMaiorCluster[menorDiferenca[1]][1] = noAtual->getWeight();
+            }
+        }
+        matrizMenorMaiorCluster[menorDiferenca[1]][2] = matrizMenorMaiorCluster[menorDiferenca[1]][1] - matrizMenorMaiorCluster[menorDiferenca[1]][0];
+
+        cout << "Chegou aqui 4" << endl;
+        listaDecrescrenteNosPorGrau.pop_front();
+    }
+    cout << "Chegou aqui 5" << endl;
+    for(int i = 0; i < cluster; i++){
+        cout << "Membros do Cluster " << i+1 << endl;
+        for(auto it = matrizCluster[i][0].begin(); it != matrizCluster[i][0].end(); it++){
+            cout << *it << " ";
+        }
+        cout << endl;
+    }
+
+    cout << "DIFERENCA DOS CLUSTERS: " << endl;
+    for(int i = 0; i < cluster; i++){
+        cout << "Diferenca do Cluster " << i+1 << " = " << matrizMenorMaiorCluster[i][2] << endl;
     }
 
 }
