@@ -336,8 +336,8 @@ void Graph::algoritmoGuloso(int cluster) {
     ordenarCrescentementeNosPorPeso(&listaCrescrenteNosPorPeso);
     ordenarDecrescentementeNosPorGrau(&listaDecrescrenteNosPorGrau);
 
-    list<int> matrizCluster[cluster][3]; //As linhas correspondem aos clusters. A primeira coluna é a lista de vertices do cluster, a segunda coluna é o menor peso e terceira coluna o maior peso
-
+    list<int> matrizCluster[cluster][1]; //As linhas correspondem aos clusters. A primeira coluna é a lista de vertices do cluster, a segunda coluna é o menor peso e terceira coluna o maior peso
+    int matrizMenorMaiorCluster[cluster][2];
     float pontoCorte = float(this->order) / float(cluster);
 
     cout << "Ponto de corte: " << pontoCorte << endl;
@@ -351,7 +351,7 @@ void Graph::algoritmoGuloso(int cluster) {
     } else {
         divisivel = false;
     }
-    
+
     int contadorLista = 1;
     int contadorLinhaMatriz = 0;
     int contadorNaoDivisivel = 1;
@@ -360,13 +360,21 @@ void Graph::algoritmoGuloso(int cluster) {
         if(divisivel){
             if(contadorLista % int(pontoCorte) == 0){
                 matrizCluster[contadorLinhaMatriz][0].push_back(*it);
+                matrizMenorMaiorCluster[contadorLinhaMatriz][0] = getNodeByRotulo(*it)->getWeight();
+                matrizMenorMaiorCluster[contadorLinhaMatriz][1] = getNodeByRotulo(*it)->getWeight();
                 cout << "Inseriu o numero " << *it << " no cluster " << contadorLinhaMatriz + 1 << endl;
+                cout << "Novo menor: " << matrizMenorMaiorCluster[contadorLinhaMatriz][0] << " Novo maior: " << matrizMenorMaiorCluster[contadorLinhaMatriz][1] << endl;
+                listaDecrescrenteNosPorGrau.remove(*it);
                 contadorLinhaMatriz++;
             }
         } else {
             if(contadorLista == int(round(pontoCorte * contadorNaoDivisivel))){
                 matrizCluster[contadorLinhaMatriz][0].push_back(*it);
+                matrizMenorMaiorCluster[contadorLinhaMatriz][0] = getNodeByRotulo(*it)->getWeight();
+                matrizMenorMaiorCluster[contadorLinhaMatriz][1] = getNodeByRotulo(*it)->getWeight();
                 cout << "Inseriu o numero " << *it << " no cluster " << contadorLinhaMatriz + 1 << endl;
+                cout << "Novo menor: " << matrizMenorMaiorCluster[contadorLinhaMatriz][0] << " Novo maior: " << matrizMenorMaiorCluster[contadorLinhaMatriz][1] << endl;
+                listaDecrescrenteNosPorGrau.remove(*it);
                 contadorLinhaMatriz++;
                 contadorNaoDivisivel++;
             }
