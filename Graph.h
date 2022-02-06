@@ -49,11 +49,14 @@ public:
     void ordenarCrescentementeNosPorPeso(list<int> *listaCrescrenteNosPorPeso);
     void ordenarDecrescentementeNosPorGrau(list<int> *listaDecrescrenteNosPorGrau);
     void algoritmoGuloso(int cluster);
-    void algoritmoGulosoRandomizado(int cluster);
+    void algoritmoGulosoRandomizado(int cluster, float alfa, int numIter);
     void algoritmoGulosoRandomizadoReativo(int cluster);
-    float** floyd(int idRotuloInicial, int idRotuloFinal );
+    float** floyd();
+
 private:
     //Auxiliar methods
-
+    Graph* subgrafoVerticeInduzido(list<int> listaNosIdRotulo);
+    bool contidoNaLista(int elemento, list<int> lista);
+    bool ehConexo();
 };
 #endif //MGGPP_GRAPH_H

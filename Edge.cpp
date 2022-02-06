@@ -29,7 +29,6 @@ Edge::~Edge(){
 //        this->next_edge = nullptr;
 //    }
     this->next_edge = nullptr;
-    cout << "destruiu" << endl;
 }
 
 // Getters

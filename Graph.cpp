@@ -257,6 +257,40 @@ void Graph::montarArestaGrafoDOT(string *grafo, string *arestaDOT, int idRotuloN
     *grafo += "]\n";
 }
 
+bool Graph::contidoNaLista(int elemento, list<int> lista) {
+    for (auto it = lista.begin(); it != lista.end(); it++) {
+        if (*it == elemento) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+Graph* Graph::subgrafoVerticeInduzido(list<int> listaNosIdRotulo) {
+    Graph *subgrafo = new Graph(0, this->directed, true, this->weighted_node); 
+
+    // Percorre lista de rotulos do subgrafo
+    for (auto it = listaNosIdRotulo.begin(); it != listaNosIdRotulo.end(); it++) {
+        Node *noGrafoOriginal = getNodeByRotulo(*it);
+        subgrafo->insertNode(noGrafoOriginal->getIdRotulo(), noGrafoOriginal->getWeight());  // Insere o nó no subgrafo
+    }
+
+    for (Node *noSubgrafo = subgrafo->getFirstNode(); noSubgrafo != nullptr; noSubgrafo = noSubgrafo->getNextNode()) {
+        Node *noGrafoOriginal = getNodeByRotulo(noSubgrafo->getIdRotulo());
+
+        // Percorre as arestas do nó 
+        for (Edge *arestaAtual = noGrafoOriginal->getFirstEdge(); arestaAtual != nullptr; arestaAtual = arestaAtual->getNextEdge()) {
+            if (contidoNaLista(arestaAtual->getTargetIdRotulo(), listaNosIdRotulo)) {
+                int pesoAresta = 1;
+                subgrafo->insertEdge(noSubgrafo->getIdRotulo(), arestaAtual->getTargetIdRotulo(), pesoAresta);  // Insere a aresta
+            }
+        }
+    }
+
+    return subgrafo;
+}
+
 void Graph::ordenarCrescentementeNosPorPeso(list<int> *listaCrescrenteNosPorPeso){
     cout << "Ordenar por Peso" << endl;
     Node *noAtual = this->first_node;
@@ -447,9 +481,26 @@ void Graph::algoritmoGuloso(int cluster) {
         cout << "Diferenca do Cluster " << i+1 << " = " << matrizMenorMaiorCluster[i][2] << endl;
     }
 
+    for (int i = 0; i < cluster; i++) {
+        list<int> clusterAtual = matrizCluster[i][0];
+        Graph *subgrafoCluster = subgrafoVerticeInduzido(clusterAtual);
+
+        // Exibindo lista de adjacência do cluster (NÃO SERÁ MANTIDO NO TRABALHO FINAL)
+        for (Node *noAtual = subgrafoCluster->getFirstNode(); noAtual != nullptr; noAtual = noAtual->getNextNode()) {
+            cout << noAtual->getIdRotulo() << " -> ";
+            for (Edge *arestaAtual = noAtual->getFirstEdge(); arestaAtual != nullptr; arestaAtual = arestaAtual->getNextEdge()) {
+                cout << arestaAtual->getTargetIdRotulo() << " ";
+            }
+            cout << endl;
+        }
+
+        // Verificando conexidade do cluster
+        cout << "Cluster" << i + 1 << " - Conexo: ";
+        cout << boolalpha << subgrafoCluster->ehConexo() << endl;
+    }
 }
 
-void Graph::algoritmoGulosoRandomizado(int cluster) {
+void Graph::algoritmoGulosoRandomizado(int cluster, float alfa, int numIter) {
     cout << "Algoritmo Guloso Randomizado" << endl;
     cout << "CLUSTER: " << cluster << endl;
     list<int> listaCrescrenteNosPorPeso; //Lista que armazena os ID's ROTULO dos Vertices
@@ -465,12 +516,44 @@ void Graph::algoritmoGulosoRandomizadoReativo(int cluster) {
     ordenarCrescentementeNosPorPeso(&listaCrescrenteNosPorPeso);
 }
 
-float** Graph::floyd(int idRotuloInicial, int idRotuloFinal ){
+bool Graph::ehConexo() {
+    float **matrizVertices = this->floyd();
 
-    float matrizVertices[this->order][this->order];
-    Node *noAtual, *noAlvo, *noInicial = getNodeByRotulo(idRotuloInicial), *noFinal = getNodeByRotulo(idRotuloFinal);
+    // Verificando conexidade
+    bool conexo = true;
+    for (int linha = 0; linha < this->order; linha++) {
+        for (int coluna = 0; coluna < this->order; coluna++) {
+            if (matrizVertices[linha][coluna] == INFINITY) {
+                conexo = false;
+                break;
+            }
+        }
+
+        if (conexo)
+            break;
+    }
+
+    // Desalocando matriz
+    for (int linha = 0; linha < this->order; linha++)
+        delete [] matrizVertices[linha];  // Desaloca cada linha da matriz
+
+    delete [] matrizVertices;  // Desaloca o vetor externo
+
+    return conexo;
+}
+
+// void Graph::floyd(int idRotuloInicial, int idRotuloFinal, float **matrizVertices){
+float** Graph::floyd() {
+    // Alocando matriz de vértices
+    float **matrizVertices = new float*[this->order];
+    for (int j = 0; j < this->order; j++)
+        matrizVertices[j] = new float[this->order];  // Alocando linhas da matriz
+
+    // Node *noAtual, *noAlvo, *noInicial = getNodeByRotulo(idRotuloInicial), *noFinal = getNodeByRotulo(idRotuloFinal);
+    Node *noAtual, *noAlvo;
     Edge *arestaAtual;
-    int linha, coluna, idInicial = noInicial->getId(), idFinal = noFinal->getId();
+    // int linha, coluna, idInicial = noInicial->getId(), idFinal = noFinal->getId();
+    int linha, coluna;
     list <int> caminho;
     list<int>::iterator it;
 
@@ -481,16 +564,16 @@ float** Graph::floyd(int idRotuloInicial, int idRotuloFinal ){
     }
 
     //Clausula de segurança para nós que não existem no grafo
-    if(noInicial == nullptr || noFinal == nullptr){
-        cout << "O no escolhido nao esta presente no grafo!" << endl;
-        return nullptr;
-    }
+    // if(noInicial == nullptr || noFinal == nullptr){
+    //     cout << "O no escolhido nao esta presente no grafo!" << endl;
+    //     return;
+    // }
 
     //Clausula de segurança para nós que não possuem Out Degree
-    if(noInicial->getOutDegree() < 1){
-        cout << "O no escolhido possui grau de saida igual a zero!" << endl;
-        return nullptr;
-    }
+    // if(noInicial->getOutDegree() < 1){
+    //     cout << "O no escolhido possui grau de saida igual a zero!" << endl;
+    //     return;
+    // }
 
     //Loop responsável por montar a matriz inicial
     for(linha = 0; linha < this->order; linha++) {
@@ -510,16 +593,15 @@ float** Graph::floyd(int idRotuloInicial, int idRotuloFinal ){
                 matrizVertices[linha][coluna] = arestaAtual->getWeight(); //insere a distancia entre os dois vertices na matriz
 
                 //caso exista aresta entre o nó inicial e o nó final, a lista caminho é atualizada
-                if(linha == idInicial - 1 && coluna == idFinal - 1){
-                    caminho.push_front(idInicial);
-                    caminho.push_back(idFinal);
-                }
+                // if(linha == idInicial - 1 && coluna == idFinal - 1){
+                //     caminho.push_front(idInicial);
+                //     caminho.push_back(idFinal);
+                // }
             } else {
                 matrizVertices[linha][coluna] = INFINITY; //quando não houver arestas entre os vértices, o valor INFINITO é usado
             }
         }
     }
-
 
     //Loop responsável por atualizar a matriz com os caminhos obtidos
     for(int k = 0; k < this->order; k++) {
@@ -535,17 +617,17 @@ float** Graph::floyd(int idRotuloInicial, int idRotuloFinal ){
                         if(matrizVertices[linha][coluna] > matrizVertices[linha][k] + matrizVertices[k][coluna]){
                             matrizVertices[linha][coluna] = matrizVertices[linha][k] + matrizVertices[k][coluna];
                             //verifica se atualizou o caminho entre os nós escolhidos pelo usuario
-                            if(linha == idInicial - 1 && coluna == idFinal - 1){
-                                //se o caminho estiver vazio, realiza a primeira inserção
-                                if(caminho.empty()){
-                                    caminho.push_front(k + 1);
-                                    caminho.push_back(idFinal);
-                                } else{
-                                    it = caminho.end();
-                                    it--;
-                                    caminho.insert(it,k + 1); //adiciona o novo vertice no caminho na penultima posição
-                                }
-                            }
+                            // if(linha == idInicial - 1 && coluna == idFinal - 1){
+                            //     //se o caminho estiver vazio, realiza a primeira inserção
+                            //     if(caminho.empty()){
+                            //         caminho.push_front(k + 1);
+                            //         caminho.push_back(idFinal);
+                            //     } else{
+                            //         it = caminho.end();
+                            //         it--;
+                            //         caminho.insert(it,k + 1); //adiciona o novo vertice no caminho na penultima posição
+                            //     }
+                            // }
                         }
                     }
                 }
@@ -555,8 +637,3 @@ float** Graph::floyd(int idRotuloInicial, int idRotuloFinal ){
 
     return matrizVertices;
 }
-
-
-
-
-
