@@ -235,20 +235,29 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file, int cluster){
         //Algoritmo Guloso
         case 2:{
             cout << "Caso 2" << endl;
-            graph->algoritmoGuloso(cluster);
+            // graph->algoritmoGuloso(cluster);
+            graph->algoritmoGuloso2(cluster, 0, 1);
             break;
         }
 
         //Algoritmo Guloso Randomizado
         case 3:{
             cout << "Caso 3" << endl;
-            graph->algoritmoGulosoRandomizado(cluster, 1, 1);
+            float alfas[3] = {0.1, 0.2, 0.3};
+
+            for (int i = 0; i < 3; i++) {
+                graph->algoritmoGuloso2(cluster, alfas[i], 1000);
+            }
+
+            // graph->algoritmoGulosoRandomizado(cluster, 1, 1);
             break;
         }
 
         //Algoritmo Guloso Randomizado Reativo
         case 4:{
             cout << "Caso 4" << endl;
+            float alfas[10] = {0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50};
+
             graph->algoritmoGulosoRandomizadoReativo(cluster);
             break;
         }

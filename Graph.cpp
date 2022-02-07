@@ -361,6 +361,181 @@ void Graph::ordenarDecrescentementeNosPorGrau(list<int> *listaDecrescrenteNosPor
     cout << endl;
 }
 
+void Graph::inicializacaoClusters(int clusters, list<int> *listaCrescrenteNosPorPeso, list<int> *listaDecrescrenteNosPorGrau, list<int> matrizCluster[], int matrizMenorMaiorCluster[][3]) {
+    float pontoCorte = float(this->order) / float(clusters);
+    bool divisivel;
+
+    if(this->order % clusters == 0){
+        divisivel = true;
+    } else {
+        divisivel = false;
+    }
+
+    int contadorLista = 1;
+    int contadorLinhaMatriz = 0;
+    int contadorNaoDivisivel = 1;
+
+    for(auto it = listaCrescrenteNosPorPeso->begin(); it != listaCrescrenteNosPorPeso->end(); it++){
+        if(divisivel){
+            if(contadorLista % int(pontoCorte) == 0){
+                matrizCluster[contadorLinhaMatriz].push_back(*it);
+                matrizMenorMaiorCluster[contadorLinhaMatriz][0] = getNodeByRotulo(*it)->getWeight();
+                matrizMenorMaiorCluster[contadorLinhaMatriz][1] = getNodeByRotulo(*it)->getWeight();
+                matrizMenorMaiorCluster[contadorLinhaMatriz][2] = matrizMenorMaiorCluster[contadorLinhaMatriz][1] - matrizMenorMaiorCluster[contadorLinhaMatriz][0];
+                cout << "Inseriu o numero " << *it << " no cluster " << contadorLinhaMatriz + 1 << endl;
+                cout << "Novo menor: " << matrizMenorMaiorCluster[contadorLinhaMatriz][0] << " Novo maior: " << matrizMenorMaiorCluster[contadorLinhaMatriz][1] << endl;
+                listaDecrescrenteNosPorGrau->remove(*it);
+                contadorLinhaMatriz++;
+            }
+        } else {
+            if(contadorLista == int(round(pontoCorte * contadorNaoDivisivel))){
+                matrizCluster[contadorLinhaMatriz].push_back(*it);
+                matrizMenorMaiorCluster[contadorLinhaMatriz][0] = getNodeByRotulo(*it)->getWeight();
+                matrizMenorMaiorCluster[contadorLinhaMatriz][1] = getNodeByRotulo(*it)->getWeight();
+                matrizMenorMaiorCluster[contadorLinhaMatriz][2] = matrizMenorMaiorCluster[contadorLinhaMatriz][1] - matrizMenorMaiorCluster[contadorLinhaMatriz][0];
+                cout << "Inseriu o numero " << *it << " no cluster " << contadorLinhaMatriz + 1 << endl;
+                cout << "Novo menor: " << matrizMenorMaiorCluster[contadorLinhaMatriz][0] << " Novo maior: " << matrizMenorMaiorCluster[contadorLinhaMatriz][1] << endl;
+                listaDecrescrenteNosPorGrau->remove(*it);
+                contadorLinhaMatriz++;
+                contadorNaoDivisivel++;
+            }
+        }
+        contadorLista++;
+    }
+}
+
+void Graph::atualizaSolucao(int clusters, Node *noAtual, list<int> matrizCluster[], int matrizMenorMaiorCluster[][3]) {
+    int pesoNoLeve, pesoNoPesado;
+    int menorDiferenca[2];
+    bool semDiferenca, atualizouMenor, atualizouMaior;
+
+    menorDiferenca[0] = int(INFINITY);
+    semDiferenca = false;
+    atualizouMenor = false;
+    atualizouMaior = false;
+    for(int i = 0; i < clusters; i++){
+        pesoNoLeve = matrizMenorMaiorCluster[i][0];
+        pesoNoPesado = matrizMenorMaiorCluster[i][1];
+
+        if(noAtual->getWeight() < pesoNoLeve){
+            if(pesoNoPesado - noAtual->getWeight() < menorDiferenca[0]){
+                menorDiferenca[0] = pesoNoPesado - noAtual->getWeight();
+                menorDiferenca[1] = i;
+                atualizouMenor = true;
+                atualizouMaior = false;
+            }
+        } else if(noAtual->getWeight() > pesoNoPesado){
+            if(noAtual->getWeight() - pesoNoLeve < menorDiferenca[0]){
+                menorDiferenca[0] = noAtual->getWeight() - pesoNoLeve;
+                menorDiferenca[1] = i;
+                atualizouMaior = true;
+                atualizouMenor = false;
+            }
+        } else {
+            menorDiferenca[0] = 0;
+            menorDiferenca[1] = i;
+            semDiferenca = true;
+            break;
+        }
+    }
+
+    matrizCluster[menorDiferenca[1]].push_back(noAtual->getIdRotulo());
+    if(!semDiferenca){
+        if(atualizouMenor){
+            matrizMenorMaiorCluster[menorDiferenca[1]][0] = noAtual->getWeight();
+        } else{
+            matrizMenorMaiorCluster[menorDiferenca[1]][1] = noAtual->getWeight();
+        }
+    }
+    matrizMenorMaiorCluster[menorDiferenca[1]][2] = matrizMenorMaiorCluster[menorDiferenca[1]][1] - matrizMenorMaiorCluster[menorDiferenca[1]][0];
+}
+
+// Precisa ser modificada para atualizar conforme um índice da lista de candidatos
+void Graph::atualizaListaCandidatos(list<int> *listaCandidatos, int indice) {
+    listaCandidatos->pop_front();
+}
+
+void Graph::algoritmoGuloso2(int clusters, float alfa, int numIter) {
+    int indice;
+    int menorDiferenca = (int) INFINITY;
+
+    for (int i = 0; i < numIter; i++) {
+        // list<int> matrizCluster[clusters];
+        list<int> *matrizCluster = new list<int>[clusters];
+        int matrizMenorMaiorCluster[clusters][3];
+        int solucaoDiferenca = 0;
+
+        list<int> listaCrescrenteNosPorPeso; //Lista que armazena os ID's ROTULO dos Vertices
+        list<int> listaCandidatos; //Lista que armazena os ID's ROTULO dos Vertices
+        ordenarCrescentementeNosPorPeso(&listaCrescrenteNosPorPeso);
+        ordenarDecrescentementeNosPorGrau(&listaCandidatos);
+
+        inicializacaoClusters(clusters, &listaCrescrenteNosPorPeso, &listaCandidatos, matrizCluster, matrizMenorMaiorCluster);
+    
+        do
+        {
+            // indice = randomRange(0, alfa * (listaCandidatos.size() - 1));
+            
+            // Node *noAtual = getNodeByRotulo(listaCandidatos.get(indice));    // Como deve ficar (guloso randomizado)
+            Node *noAtual = getNodeByRotulo(listaCandidatos.front());           // Como está atualmente (guloso)
+
+            atualizaSolucao(clusters, noAtual, matrizCluster, matrizMenorMaiorCluster);
+
+            atualizaListaCandidatos(&listaCandidatos, 0);  // Precisa receber o indice como segundo parâmetro
+
+        } while (!listaCandidatos.empty());
+
+        // Calculando gap da solução
+        for (int j = 0; j < clusters; j++) {
+            solucaoDiferenca += matrizMenorMaiorCluster[j][2];
+        }
+        
+        // Comparando com a melhor solução
+        if (solucaoDiferenca < menorDiferenca) {
+            // solBest = solucaoAtual;
+        }
+
+        // ================= EXIBIÇÃO DE RESULTADOS ====================
+
+        for(int i = 0; i < clusters; i++){
+            cout << "Membros do Cluster " << i+1 << endl;
+            for(auto it = matrizCluster[i].begin(); it != matrizCluster[i].end(); it++){
+                cout << *it << " ";
+            }
+            cout << endl;
+        }
+
+        cout << "DIFERENCA DOS CLUSTERS: " << endl;
+        for(int i = 0; i < clusters; i++){
+            cout << "Menor peso do Cluster " << i+1 << " = " << matrizMenorMaiorCluster[i][0] << endl;
+            cout << "Maior peso do Cluster " << i+1 << " = " << matrizMenorMaiorCluster[i][1] << endl;
+            cout << "Diferenca do Cluster " << i+1 << " = " << matrizMenorMaiorCluster[i][2] << endl;
+        }
+
+        // Checagem de conexidade
+        for (int i = 0; i < clusters; i++) {
+            list<int> clusterAtual = matrizCluster[i];
+            Graph *subgrafoCluster = subgrafoVerticeInduzido(clusterAtual);
+
+            // Exibindo lista de adjacência do cluster (NÃO SERÁ MANTIDO NO TRABALHO FINAL)
+            for (Node *noAtual = subgrafoCluster->getFirstNode(); noAtual != nullptr; noAtual = noAtual->getNextNode()) {
+                cout << noAtual->getIdRotulo() << " -> ";
+                for (Edge *arestaAtual = noAtual->getFirstEdge(); arestaAtual != nullptr; arestaAtual = arestaAtual->getNextEdge()) {
+                    cout << arestaAtual->getTargetIdRotulo() << " ";
+                }
+                cout << endl;
+            }
+
+            // Verificando conexidade do cluster
+            cout << "Cluster" << i + 1 << " - Conexo: ";
+            cout << boolalpha << subgrafoCluster->ehConexo() << endl;
+        }
+
+        // ================= FIM EXIBIÇÃO DE RESULTADOS ====================
+    }
+
+}
+
 void Graph::algoritmoGuloso(int cluster) {
 
     cout << "Algoritmo Guloso" << endl;

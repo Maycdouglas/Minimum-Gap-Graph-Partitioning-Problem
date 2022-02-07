@@ -48,7 +48,11 @@ public:
     void montarArestaGrafoDOT(string *grafo, string *arestaDOT, int idRotuloNoAtual, int idRotuloNoAlvo, float pesoAresta, bool retorno);
     void ordenarCrescentementeNosPorPeso(list<int> *listaCrescrenteNosPorPeso);
     void ordenarDecrescentementeNosPorGrau(list<int> *listaDecrescrenteNosPorGrau);
+    void inicializacaoClusters(int clusters, list<int> *listaCrescrenteNosPorPeso, list<int> *listaDecrescrenteNosPorGrau, list<int> matrizCluster[], int matrizMenorMaiorCluster[][3]);
+    void atualizaSolucao(int clusters, Node *noAtual, list<int> matrizCluster[], int matrizMenorMaiorCluster[][3]);
+    void atualizaListaCandidatos(list<int> *listaCandidatos, int indice);
     void algoritmoGuloso(int cluster);
+    void algoritmoGuloso2(int clusters, float alfa, int numIter);
     void algoritmoGulosoRandomizado(int cluster, float alfa, int numIter);
     void algoritmoGulosoRandomizadoReativo(int cluster);
     float** floyd();
