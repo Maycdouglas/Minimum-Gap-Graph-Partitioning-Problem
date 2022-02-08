@@ -549,6 +549,20 @@ void Graph::algoritmoGuloso(int cluster) {
     int matrizMenorMaiorCluster[cluster][3];
     float pontoCorte = float(this->order) / float(cluster);
 
+    cout << "IMPRIMINDO OS ADJACENTES DE CADA VERTICE " << endl;
+    Node *noTesteOrigem = this->first_node;
+    Edge *arestaTeste;
+    while(noTesteOrigem != nullptr){
+        arestaTeste = noTesteOrigem->getFirstEdge();
+        cout << "VIZINHOS DO NOH " << noTesteOrigem->getIdRotulo() << endl;
+        while(arestaTeste != nullptr) {
+            cout << arestaTeste->getTargetIdRotulo() << " ";
+            arestaTeste = arestaTeste->getNextEdge();
+        }
+        cout << endl;
+        noTesteOrigem = noTesteOrigem->getNextNode();
+    }
+
     cout << "Ponto de corte: " << pontoCorte << endl;
     cout << "Ordem: " << this->order << endl;
     cout << "Cluster: " << cluster << endl;
@@ -599,6 +613,8 @@ void Graph::algoritmoGuloso(int cluster) {
     bool semDiferenca, atualizouMenor, atualizouMaior, encontrouCluster;
     stack<int> pilhaVertices;
 
+    cout << "CHEGOU AQUI" << endl;
+
     while(!listaDecrescrenteNosPorGrau.empty()){
         noAtual = getNodeByRotulo(listaDecrescrenteNosPorGrau.front());
         menorDiferenca[0] = int(INFINITY);
@@ -606,10 +622,11 @@ void Graph::algoritmoGuloso(int cluster) {
         atualizouMenor = false;
         atualizouMaior = false;
         encontrouCluster = false;
+        cout << "CHEGOU AQUI 2" << endl;
         for(int i = 0; i < cluster; i++){
             pesoNoLeve = matrizMenorMaiorCluster[i][0];
             pesoNoPesado = matrizMenorMaiorCluster[i][1];
-
+            cout << "CHEGOU AQUI 3" << endl;
             if(noAtual->getWeight() < pesoNoLeve){
                 if(pesoNoPesado - noAtual->getWeight() < menorDiferenca[0] && mantemConexidade(matrizCluster[i][0],noAtual)){
                     menorDiferenca[0] = pesoNoPesado - noAtual->getWeight();
@@ -633,11 +650,15 @@ void Graph::algoritmoGuloso(int cluster) {
                 encontrouCluster = true;
                 break;
             } else {
+                cout << "Nao encontrou conexidade" << endl;
                 pilhaVertices.push(noAtual->getIdRotulo());
             }
         }
+        cout << "CHEGOU AQUI 4" << endl;
         if(encontrouCluster){
+            cout << "ENCONTROU UM CLUSTER PARA ELE ->  " << noAtual->getIdRotulo() << endl;
             matrizCluster[menorDiferenca[1]][0].push_back(noAtual->getIdRotulo());
+            cout << "O CLUSTER QUE ELE ENTROU FOI: " << menorDiferenca[1] + 1 << endl;
             if(!semDiferenca){
                 if(atualizouMenor){
                     matrizMenorMaiorCluster[menorDiferenca[1]][0] = noAtual->getWeight();
@@ -648,14 +669,19 @@ void Graph::algoritmoGuloso(int cluster) {
             matrizMenorMaiorCluster[menorDiferenca[1]][2] = matrizMenorMaiorCluster[menorDiferenca[1]][1] - matrizMenorMaiorCluster[menorDiferenca[1]][0];
         }
 
+        cout << "CHEGOU AQUI 5" << endl;
+
         listaDecrescrenteNosPorGrau.pop_front();
         if(listaDecrescrenteNosPorGrau.empty() && !pilhaVertices.empty()){
+            cout << "A lista acabou e a pilha nao esta vazia!" << endl;
             while(!pilhaVertices.empty()){
                 listaDecrescrenteNosPorGrau.push_front(pilhaVertices.top());
                 pilhaVertices.pop();
             }
         }
     }
+
+    cout << "CHEGOU AQUI 6" << endl;
 
     for(int i = 0; i < cluster; i++){
         cout << "Membros do Cluster " << i+1 << endl;
@@ -691,8 +717,11 @@ void Graph::algoritmoGuloso(int cluster) {
 
 bool Graph::mantemConexidade(list<int> listaCluster,Node *noAtual) {
     Node *noAlvo;
+    cout << "=== ESTOU NA FUNCAO MANTEM CONEXIDADE "<< endl;
+    cout << "O noh atual eh: " << noAtual->getIdRotulo() << endl;
     for (auto it = listaCluster.begin(); it != listaCluster.end(); it++) {
         noAlvo = getNodeByRotulo(*it);
+        cout << "O noh alvo eh: " << noAlvo->getIdRotulo() << endl;
         if(noAtual->searchEdge(noAlvo->getId())){
             return true;
         }

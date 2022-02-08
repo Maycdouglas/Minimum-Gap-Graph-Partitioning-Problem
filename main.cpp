@@ -169,7 +169,7 @@ Graph* leituraInstancia2(ifstream& input_file, int directed, int weightedEdge, i
 
     cout << "Numero de arestas: " << numEdges << endl;
 
-    while(contador < numEdges/2){
+    while(contador < numEdges / 2){
         cout << "CONTADOR = " << contador << endl;
         input_file >> aresta;
         posicaoParanteses = aresta.find(")");
@@ -235,8 +235,8 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file, int cluster){
         //Algoritmo Guloso
         case 2:{
             cout << "Caso 2" << endl;
-            // graph->algoritmoGuloso(cluster);
-            graph->algoritmoGuloso2(cluster, 0, 1);
+             graph->algoritmoGuloso(cluster);
+//            graph->algoritmoGuloso2(cluster, 0, 1);
             break;
         }
 
