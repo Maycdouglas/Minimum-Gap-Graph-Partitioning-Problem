@@ -596,7 +596,8 @@ void Graph::algoritmoGuloso(int cluster) {
     Node *noAtual;
     int pesoNoLeve, pesoNoPesado;
     int menorDiferenca[2];
-    bool semDiferenca, atualizouMenor, atualizouMaior;
+    bool semDiferenca, atualizouMenor, atualizouMaior, encontrouCluster;
+    stack<int> pilhaVertices;
 
     while(!listaDecrescrenteNosPorGrau.empty()){
         noAtual = getNodeByRotulo(listaDecrescrenteNosPorGrau.front());
@@ -604,43 +605,56 @@ void Graph::algoritmoGuloso(int cluster) {
         semDiferenca = false;
         atualizouMenor = false;
         atualizouMaior = false;
+        encontrouCluster = false;
         for(int i = 0; i < cluster; i++){
             pesoNoLeve = matrizMenorMaiorCluster[i][0];
             pesoNoPesado = matrizMenorMaiorCluster[i][1];
 
             if(noAtual->getWeight() < pesoNoLeve){
-                if(pesoNoPesado - noAtual->getWeight() < menorDiferenca[0]){
+                if(pesoNoPesado - noAtual->getWeight() < menorDiferenca[0] && mantemConexidade(matrizCluster[i][0],noAtual)){
                     menorDiferenca[0] = pesoNoPesado - noAtual->getWeight();
                     menorDiferenca[1] = i;
                     atualizouMenor = true;
                     atualizouMaior = false;
+                    encontrouCluster = true;
                 }
-            } else if(noAtual->getWeight() > pesoNoPesado){
+            } else if(noAtual->getWeight() > pesoNoPesado && mantemConexidade(matrizCluster[i][0],noAtual)){
                 if(noAtual->getWeight() - pesoNoLeve < menorDiferenca[0]){
                     menorDiferenca[0] = noAtual->getWeight() - pesoNoLeve;
                     menorDiferenca[1] = i;
                     atualizouMaior = true;
                     atualizouMenor = false;
+                    encontrouCluster = true;
                 }
-            } else {
+            } else if(mantemConexidade(matrizCluster[i][0],noAtual)){
                 menorDiferenca[0] = 0;
                 menorDiferenca[1] = i;
                 semDiferenca = true;
+                encontrouCluster = true;
                 break;
+            } else {
+                pilhaVertices.push(noAtual->getIdRotulo());
             }
         }
-
-        matrizCluster[menorDiferenca[1]][0].push_back(noAtual->getIdRotulo());
-        if(!semDiferenca){
-            if(atualizouMenor){
-                matrizMenorMaiorCluster[menorDiferenca[1]][0] = noAtual->getWeight();
-            } else{
-                matrizMenorMaiorCluster[menorDiferenca[1]][1] = noAtual->getWeight();
+        if(encontrouCluster){
+            matrizCluster[menorDiferenca[1]][0].push_back(noAtual->getIdRotulo());
+            if(!semDiferenca){
+                if(atualizouMenor){
+                    matrizMenorMaiorCluster[menorDiferenca[1]][0] = noAtual->getWeight();
+                } else{
+                    matrizMenorMaiorCluster[menorDiferenca[1]][1] = noAtual->getWeight();
+                }
             }
+            matrizMenorMaiorCluster[menorDiferenca[1]][2] = matrizMenorMaiorCluster[menorDiferenca[1]][1] - matrizMenorMaiorCluster[menorDiferenca[1]][0];
         }
-        matrizMenorMaiorCluster[menorDiferenca[1]][2] = matrizMenorMaiorCluster[menorDiferenca[1]][1] - matrizMenorMaiorCluster[menorDiferenca[1]][0];
 
         listaDecrescrenteNosPorGrau.pop_front();
+        if(listaDecrescrenteNosPorGrau.empty() && !pilhaVertices.empty()){
+            while(!pilhaVertices.empty()){
+                listaDecrescrenteNosPorGrau.push_front(pilhaVertices.top());
+                pilhaVertices.pop();
+            }
+        }
     }
 
     for(int i = 0; i < cluster; i++){
@@ -673,6 +687,17 @@ void Graph::algoritmoGuloso(int cluster) {
         cout << "Cluster" << i + 1 << " - Conexo: ";
         cout << boolalpha << subgrafoCluster->ehConexo() << endl;
     }
+}
+
+bool Graph::mantemConexidade(list<int> listaCluster,Node *noAtual) {
+    Node *noAlvo;
+    for (auto it = listaCluster.begin(); it != listaCluster.end(); it++) {
+        noAlvo = getNodeByRotulo(*it);
+        if(noAtual->searchEdge(noAlvo->getId())){
+            return true;
+        }
+    }
+    return false;
 }
 
 void Graph::algoritmoGulosoRandomizado(int cluster, float alfa, int numIter) {

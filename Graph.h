@@ -52,6 +52,7 @@ public:
     void atualizaSolucao(int clusters, Node *noAtual, list<int> matrizCluster[], int matrizMenorMaiorCluster[][3]);
     void atualizaListaCandidatos(list<int> *listaCandidatos, int indice);
     void algoritmoGuloso(int cluster);
+    bool mantemConexidade(list<int> listaCluster,Node *noAtual);
     void algoritmoGuloso2(int clusters, float alfa, int numIter);
     void algoritmoGulosoRandomizado(int cluster, float alfa, int numIter);
     void algoritmoGulosoRandomizadoReativo(int cluster);
