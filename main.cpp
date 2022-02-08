@@ -235,8 +235,8 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file, int cluster){
         //Algoritmo Guloso
         case 2:{
             cout << "Caso 2" << endl;
-            // graph->algoritmoGuloso(cluster);
-            graph->algoritmoGuloso2(cluster, 0, 1);
+             graph->algoritmoGuloso(cluster);
+//            graph->algoritmoGuloso2(cluster, 0, 1);
             break;
         }
 
@@ -245,9 +245,9 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file, int cluster){
             cout << "Caso 3" << endl;
             float alfas[3] = {0.1, 0.2, 0.3};
 
-            for (int i = 0; i < 3; i++) {
-                graph->algoritmoGuloso2(cluster, alfas[i], 1000);
-            }
+//            for (int i = 0; i < 3; i++) {
+//                graph->algoritmoGuloso2(cluster, alfas[i], 1000);
+//            }
 
             // graph->algoritmoGulosoRandomizado(cluster, 1, 1);
             break;
