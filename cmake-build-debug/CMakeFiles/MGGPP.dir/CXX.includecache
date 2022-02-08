@@ -6,6 +6,12 @@
 
 #IncludeRegexTransform: 
 
+C:/Users/Maycon Douglas/CLionProjects/MGGPP/Edge.cpp
+Edge.h
+C:/Users/Maycon Douglas/CLionProjects/MGGPP/Edge.h
+iostream
+-
+
 C:/Users/Maycon Douglas/CLionProjects/MGGPP/Edge.h
 
 C:/Users/Maycon Douglas/CLionProjects/MGGPP/Graph.cpp
@@ -50,7 +56,39 @@ list
 queue
 -
 
+C:/Users/Maycon Douglas/CLionProjects/MGGPP/Node.cpp
+Node.h
 C:/Users/Maycon Douglas/CLionProjects/MGGPP/Node.h
 Edge.h
 C:/Users/Maycon Douglas/CLionProjects/MGGPP/Edge.h
+iostream
+-
+
+C:/Users/Maycon Douglas/CLionProjects/MGGPP/Node.h
+Edge.h
+C:/Users/Maycon Douglas/CLionProjects/MGGPP/Edge.h
+
+C:/Users/Maycon Douglas/CLionProjects/MGGPP/main.cpp
+iostream
+-
+fstream
+-
+string
+-
+cmath
+-
+utility
+-
+tuple
+-
+iomanip
+-
+cstdlib
+-
+chrono
+-
+Graph.h
+C:/Users/Maycon Douglas/CLionProjects/MGGPP/Graph.h
+Node.h
+C:/Users/Maycon Douglas/CLionProjects/MGGPP/Node.h
 
