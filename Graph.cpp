@@ -610,18 +610,25 @@ void Graph::algoritmoGuloso(int cluster) {
     Node *noAtual;
     int pesoNoLeve, pesoNoPesado;
     int menorDiferenca[2];
-    bool semDiferenca, atualizouMenor, atualizouMaior, encontrouCluster;
+    bool semDiferenca, atualizouMenor, atualizouMaior, encontrouCluster, colocouNaPilha;
     stack<int> pilhaVertices;
 
     cout << "CHEGOU AQUI" << endl;
 
     while(!listaDecrescrenteNosPorGrau.empty()){
+        cout << "LISTA ATUALMENTE: " << endl;
+        for(auto it = listaDecrescrenteNosPorGrau.begin(); it != listaDecrescrenteNosPorGrau.end(); it++){
+            cout << *it << " ";
+        }
+        cout << endl;
+
         noAtual = getNodeByRotulo(listaDecrescrenteNosPorGrau.front());
         menorDiferenca[0] = int(INFINITY);
         semDiferenca = false;
         atualizouMenor = false;
         atualizouMaior = false;
         encontrouCluster = false;
+        colocouNaPilha = false;
         cout << "CHEGOU AQUI 2" << endl;
         for(int i = 0; i < cluster; i++){
             pesoNoLeve = matrizMenorMaiorCluster[i][0];
@@ -634,6 +641,10 @@ void Graph::algoritmoGuloso(int cluster) {
                     atualizouMenor = true;
                     atualizouMaior = false;
                     encontrouCluster = true;
+                    if(colocouNaPilha){
+                        pilhaVertices.pop();
+                        colocouNaPilha = false;
+                    }
                 }
             } else if(noAtual->getWeight() > pesoNoPesado && mantemConexidade(matrizCluster[i][0],noAtual)){
                 if(noAtual->getWeight() - pesoNoLeve < menorDiferenca[0]){
@@ -642,16 +653,27 @@ void Graph::algoritmoGuloso(int cluster) {
                     atualizouMaior = true;
                     atualizouMenor = false;
                     encontrouCluster = true;
+                    if(colocouNaPilha){
+                        pilhaVertices.pop();
+                        colocouNaPilha = false;
+                    }
                 }
             } else if(mantemConexidade(matrizCluster[i][0],noAtual)){
                 menorDiferenca[0] = 0;
                 menorDiferenca[1] = i;
                 semDiferenca = true;
                 encontrouCluster = true;
+                if(colocouNaPilha){
+                    pilhaVertices.pop();
+                    colocouNaPilha = false;
+                }
                 break;
-            } else {
+            } else if(!encontrouCluster){
                 cout << "Nao encontrou conexidade" << endl;
-                pilhaVertices.push(noAtual->getIdRotulo());
+                if(!colocouNaPilha){
+                    colocouNaPilha = true;
+                    pilhaVertices.push(noAtual->getIdRotulo());
+                }
             }
         }
         cout << "CHEGOU AQUI 4" << endl;
@@ -672,10 +694,20 @@ void Graph::algoritmoGuloso(int cluster) {
         cout << "CHEGOU AQUI 5" << endl;
 
         listaDecrescrenteNosPorGrau.pop_front();
+        cout << "LISTA ATUALMENTE2: " << endl;
+        for(auto it = listaDecrescrenteNosPorGrau.begin(); it != listaDecrescrenteNosPorGrau.end(); it++){
+            cout << *it << " ";
+        }
+        cout << endl;
         if(listaDecrescrenteNosPorGrau.empty() && !pilhaVertices.empty()){
             cout << "A lista acabou e a pilha nao esta vazia!" << endl;
             while(!pilhaVertices.empty()){
                 listaDecrescrenteNosPorGrau.push_front(pilhaVertices.top());
+                cout << "LISTA ATUALMENTE3: " << endl;
+                for(auto it = listaDecrescrenteNosPorGrau.begin(); it != listaDecrescrenteNosPorGrau.end(); it++){
+                    cout << *it << " ";
+                }
+                cout << endl;
                 pilhaVertices.pop();
             }
         }
