@@ -635,8 +635,10 @@ void Graph::algoritmoGuloso(int cluster) {
             pesoNoPesado = matrizMenorMaiorCluster[i][1];
             cout << "CHEGOU AQUI 3" << endl;
             if(noAtual->getWeight() < pesoNoLeve){
+                //Condicional que garante a conexidade entre os elementos dos clusters
                 if(pesoNoPesado - noAtual->getWeight() < menorDiferenca[0] && mantemConexidade(matrizCluster[i],noAtual)){
 
+                    //Condicional que garante que os clusters terão no minimo dois elementos
                     if(menorDiferenca[0] == int(INFINITY) || matrizCluster[i].size() == 1 || matrizCluster[menorDiferenca[1]].size() > 1 ){
                         menorDiferenca[0] = pesoNoPesado - noAtual->getWeight();
                         menorDiferenca[1] = i;
@@ -650,8 +652,10 @@ void Graph::algoritmoGuloso(int cluster) {
                     }
 
                 }
+                   //Condicional que garante a conexidade entre os elementos dos clusters
             } else if(noAtual->getWeight() > pesoNoPesado && mantemConexidade(matrizCluster[i],noAtual)){
                 if(noAtual->getWeight() - pesoNoLeve < menorDiferenca[0]){
+                    //Condicional que garante que os clusters terão no minimo dois elementos
                     if(menorDiferenca[0] == int(INFINITY) || matrizCluster[i].size() == 1 || matrizCluster[menorDiferenca[1]].size() > 1 ) {
                         menorDiferenca[0] = noAtual->getWeight() - pesoNoLeve;
                         menorDiferenca[1] = i;
@@ -664,8 +668,9 @@ void Graph::algoritmoGuloso(int cluster) {
                         }
                     }
                 }
+                   //Condicional que garante a conexidade entre os elementos dos clusters
             } else if(mantemConexidade(matrizCluster[i],noAtual)){
-
+                //Condicional que garante que os clusters terão no minimo dois elementos
                 if(menorDiferenca[0] == int(INFINITY) || matrizCluster[i].size() == 1 || matrizCluster[menorDiferenca[1]].size() > 1 ) {
                     menorDiferenca[0] = 0;
                     menorDiferenca[1] = i;
@@ -757,6 +762,7 @@ void Graph::algoritmoGuloso(int cluster) {
     }
 }
 
+//Funcao que verifica se a inserção de um novo elemento no cluster manterá a conexidade do cluster
 bool Graph::mantemConexidade(list<int> listaCluster,Node *noAtual) {
     Node *noAlvo;
     cout << "=== ESTOU NA FUNCAO MANTEM CONEXIDADE "<< endl;
