@@ -10,6 +10,12 @@
 
 using namespace std;
 
+struct solucao
+{
+    int diferenca;
+    list<int> *clusters;
+};
+
 class Graph{
 
     //Atributes
@@ -27,6 +33,7 @@ public:
     Graph(int order, bool directed, bool weighted_edge, bool weighted_node);
     //Destructor
     ~Graph();
+    
     //Getters
     int getOrder();
     int getNumberEdges();
@@ -51,10 +58,10 @@ public:
     void inicializacaoClusters(int clusters, list<int> *listaCrescrenteNosPorPeso, list<int> *listaDecrescrenteNosPorGrau, list<int> matrizCluster[], int matrizMenorMaiorCluster[][3]);
     void atualizaSolucao(int clusters, Node *noAtual, list<int> matrizCluster[], int matrizMenorMaiorCluster[][3], stack<int> *pilhaReservaVertices);
     void atualizaListaCandidatos(list<int> *listaCandidatos, int indice, stack<int> *pilhaReservaVertices);
-    int algoritmoGuloso(int clusters);
+    solucao algoritmoGuloso(int clusters);
     bool mantemConexidade(list<int> listaCluster,Node *noAtual);
-    int algoritmoGulosoRandomizado(int clusters, float alfa, int numIter);
-    int algoritmoGulosoRandomizadoReativo(int clusters, float alfas[], int numIter, int bloco);
+    solucao algoritmoGulosoRandomizado(int clusters, float alfa, int numIter);
+    solucao algoritmoGulosoRandomizadoReativo(int clusters, float alfas[], int numIter, int bloco);
     float** floyd();
 
 private:

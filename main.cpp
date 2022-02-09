@@ -208,6 +208,33 @@ int menu(){
 
 }
 
+string montarStringSaidaClusters(solucao solucaoAlgoritmo, int clusters) {
+    string outputString;
+
+    for (int i = 0; i < clusters; i++) {
+        outputString += "Membros do Cluster " + to_string(i + 1) + "\n";
+
+        list<int> cluster = solucaoAlgoritmo.clusters[i];
+        for (auto it = cluster.begin(); it != cluster.end(); it++) {
+            outputString += to_string(*it) + " ";
+        }
+        outputString += "\n";
+    }
+
+    outputString += "\n";
+
+    return outputString;
+}
+
+string montarStringSaida(solucao solucaoAlgoritmo, int clusters, int numExecucao, int tempoDuracao) {
+    string outputString = "Execucao: " + to_string(numExecucao);
+    outputString += " - Gap: " + to_string(solucaoAlgoritmo.diferenca);
+    outputString += " - Tempo de processamento: " + to_string(tempoDuracao) + " segundos\n\n";
+    outputString += montarStringSaidaClusters(solucaoAlgoritmo, clusters);
+
+    return outputString;
+}
+
 void selecionar(int selecao, Graph* graph, ofstream& output_file, int cluster){
 
     switch (selecao) {
@@ -236,10 +263,18 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file, int cluster){
         case 2:{
             cout << "Caso 2" << endl;
             output_file << "Algoritmo Guloso\n";
+            string outputString;
 
-            int gap = graph->algoritmoGuloso(cluster);
-            cout << "Gap: " << gap << endl;
-            output_file << "Gap: " + to_string(gap) + "\n";
+            solucao solucaoGuloso = graph->algoritmoGuloso(cluster);
+
+            cout << "Gap: " << solucaoGuloso.diferenca << endl;
+            outputString += "Gap: " + to_string(solucaoGuloso.diferenca) + "\n";
+
+            outputString += montarStringSaidaClusters(solucaoGuloso, cluster);
+
+            output_file << outputString;
+
+            delete [] solucaoGuloso.clusters;
 
             break;
         }
@@ -260,20 +295,19 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file, int cluster){
 
                 cout << "----------------------------------" << endl;
 
-                for (int execucao = 1; execucao <= 30; execucao++) {
+                for (int execucao = 1; execucao <= 2; execucao++) {
                     auto tempoInicial = chrono::high_resolution_clock::now();
 
-                    int gap = graph->algoritmoGulosoRandomizado(cluster, alfa, 1000);
+                    solucao solucaoGulosoRandomizado = graph->algoritmoGulosoRandomizado(cluster, alfa, 1000);
                     
                     auto tempoFinal = chrono::high_resolution_clock::now();
                     auto duracaoEmSegundos = chrono::duration_cast<chrono::seconds>(tempoFinal - tempoInicial);
                     
-                    string resultado = "Execucao: " + to_string(execucao);
-                    resultado += " - Gap: " + to_string(gap);
-                    resultado += " - Tempo de processamento: " + to_string(duracaoEmSegundos.count()) + " segundos";
+                    string outputString = montarStringSaida(solucaoGulosoRandomizado, cluster, execucao, duracaoEmSegundos.count());
+                    cout << outputString;
+                    output_file << outputString;
 
-                    cout << resultado << endl;
-                    output_file << resultado + "\n";
+                    delete [] solucaoGulosoRandomizado.clusters;
                 }
 
                 cout << "----------------------------------" << endl;
@@ -291,20 +325,20 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file, int cluster){
             
             cout << "----------------------------------" << endl;
 
-            for (int execucao = 1; execucao <= 30; execucao++) {
+            for (int execucao = 1; execucao <= 2; execucao++) {
                 auto tempoInicial = chrono::high_resolution_clock::now();
 
-                int gap = graph->algoritmoGulosoRandomizadoReativo(cluster, alfas, 4000, 250);
+                solucao solucaoReativo = graph->algoritmoGulosoRandomizadoReativo(cluster, alfas, 4000, 250);
                 
                 auto tempoFinal = chrono::high_resolution_clock::now();
                 auto duracaoEmSegundos = chrono::duration_cast<chrono::seconds>(tempoFinal - tempoInicial);
                 
-                string resultado = "Execucao: " + to_string(execucao);
-                resultado += " - Gap: " + to_string(gap);
-                resultado += " - Tempo de processamento: " + to_string(duracaoEmSegundos.count()) + " segundos";
+                string outputString = montarStringSaida(solucaoReativo, cluster, execucao, duracaoEmSegundos.count());
 
-                cout << resultado << endl;
-                output_file << resultado + "\n";
+                cout << outputString;
+                output_file << outputString;
+
+                delete [] solucaoReativo.clusters;
             }
 
             cout << "----------------------------------" << endl;

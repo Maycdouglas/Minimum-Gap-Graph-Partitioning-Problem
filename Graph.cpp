@@ -536,7 +536,7 @@ void Graph::atualizaListaCandidatos(list<int> *listaCandidatos, int indice, stac
     }
 }
 
-int Graph::algoritmoGulosoRandomizado(int clusters, float alfa, int numIter) {
+solucao Graph::algoritmoGulosoRandomizado(int clusters, float alfa, int numIter) {
     list<int> *melhorSolucao = nullptr;
     int menorDiferenca = (int) INFINITY;
     
@@ -631,12 +631,15 @@ int Graph::algoritmoGulosoRandomizado(int clusters, float alfa, int numIter) {
         // ================= FIM EXIBIÇÃO DE RESULTADOS ====================
     }
 
-    delete [] melhorSolucao;
+    solucao structMelhorSolucao = {
+        .diferenca = menorDiferenca,
+        .clusters = melhorSolucao
+    };
 
-    return menorDiferenca;
+    return structMelhorSolucao;
 }
 
-int Graph::algoritmoGuloso(int clusters) {
+solucao Graph::algoritmoGuloso(int clusters) {
     return this->algoritmoGulosoRandomizado(clusters, 0, 1);
 }
 
@@ -721,7 +724,7 @@ void Graph::atualizarMediasReativo(float medias[], int acumuladorDiferencas[], i
     // cout << endl;
 }
 
-int Graph::algoritmoGulosoRandomizadoReativo(int clusters, float alfas[], int numIter, int bloco) {
+solucao Graph::algoritmoGulosoRandomizadoReativo(int clusters, float alfas[], int numIter, int bloco) {
     // cout << "Algoritmo Guloso Randomizado Reativo" << endl;
     // cout << "CLUSTERS: " << clusters << endl;
 
@@ -796,9 +799,12 @@ int Graph::algoritmoGulosoRandomizadoReativo(int clusters, float alfas[], int nu
         // cout << "Melhor: " << menorDiferenca << endl;
     }
 
-    delete [] melhorSolucao;
+    solucao structMelhorSolucao = {
+        .diferenca = menorDiferenca,
+        .clusters = melhorSolucao
+    };
 
-    return menorDiferenca;
+    return structMelhorSolucao;
 }
 
 bool Graph::ehConexo() {
