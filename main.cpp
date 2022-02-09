@@ -235,30 +235,79 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file, int cluster){
         //Algoritmo Guloso
         case 2:{
             cout << "Caso 2" << endl;
-             graph->algoritmoGuloso(cluster);
-//            graph->algoritmoGuloso2(cluster, 0, 1);
+            output_file << "Algoritmo Guloso\n";
+
+            int gap = graph->algoritmoGuloso(cluster);
+            cout << "Gap: " << gap << endl;
+            output_file << "Gap: " + to_string(gap) + "\n";
+
             break;
         }
 
         //Algoritmo Guloso Randomizado
         case 3:{
             cout << "Caso 3" << endl;
+            output_file << "Algoritmo Guloso Randomizado\n";
+
             float alfas[3] = {0.1, 0.2, 0.3};
 
             for (int i = 0; i < 3; i++) {
-                graph->algoritmoGuloso2(cluster, alfas[i], 1000);
+                float alfa = alfas[i];
+                
+                string tituloAlfa = "ALFA: " + to_string(alfa);
+                cout << tituloAlfa << endl;
+                output_file << tituloAlfa + "\n";
+
+                cout << "----------------------------------" << endl;
+
+                for (int execucao = 1; execucao <= 30; execucao++) {
+                    auto tempoInicial = chrono::high_resolution_clock::now();
+
+                    int gap = graph->algoritmoGulosoRandomizado(cluster, alfa, 1000);
+                    
+                    auto tempoFinal = chrono::high_resolution_clock::now();
+                    auto duracaoEmSegundos = chrono::duration_cast<chrono::seconds>(tempoFinal - tempoInicial);
+                    
+                    string resultado = "Execucao: " + to_string(execucao);
+                    resultado += " - Gap: " + to_string(gap);
+                    resultado += " - Tempo de processamento: " + to_string(duracaoEmSegundos.count()) + " segundos";
+
+                    cout << resultado << endl;
+                    output_file << resultado + "\n";
+                }
+
+                cout << "----------------------------------" << endl;
             }
 
-            // graph->algoritmoGulosoRandomizado(cluster, 1, 1);
             break;
         }
 
         //Algoritmo Guloso Randomizado Reativo
         case 4:{
             cout << "Caso 4" << endl;
-            float alfas[10] = {0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50};
+            output_file << "Algoritmo Guloso Randomizado Reativo\n";
 
-            graph->algoritmoGulosoRandomizadoReativo(cluster);
+            float alfas[10] = {0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50};
+            
+            cout << "----------------------------------" << endl;
+
+            for (int execucao = 1; execucao <= 30; execucao++) {
+                auto tempoInicial = chrono::high_resolution_clock::now();
+
+                int gap = graph->algoritmoGulosoRandomizadoReativo(cluster, alfas, 4000, 250);
+                
+                auto tempoFinal = chrono::high_resolution_clock::now();
+                auto duracaoEmSegundos = chrono::duration_cast<chrono::seconds>(tempoFinal - tempoInicial);
+                
+                string resultado = "Execucao: " + to_string(execucao);
+                resultado += " - Gap: " + to_string(gap);
+                resultado += " - Tempo de processamento: " + to_string(duracaoEmSegundos.count()) + " segundos";
+
+                cout << resultado << endl;
+                output_file << resultado + "\n";
+            }
+
+            cout << "----------------------------------" << endl;
             break;
         }
 
