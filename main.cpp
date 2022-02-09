@@ -295,7 +295,7 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file, int cluster){
 
                 cout << "----------------------------------" << endl;
 
-                for (int execucao = 1; execucao <= 2; execucao++) {
+                for (int execucao = 1; execucao <= 30; execucao++) {
                     auto tempoInicial = chrono::high_resolution_clock::now();
 
                     solucao solucaoGulosoRandomizado = graph->algoritmoGulosoRandomizado(cluster, alfa, 1000);
@@ -325,7 +325,7 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file, int cluster){
             
             cout << "----------------------------------" << endl;
 
-            for (int execucao = 1; execucao <= 2; execucao++) {
+            for (int execucao = 1; execucao <= 30; execucao++) {
                 auto tempoInicial = chrono::high_resolution_clock::now();
 
                 solucao solucaoReativo = graph->algoritmoGulosoRandomizadoReativo(cluster, alfas, 4000, 250);
