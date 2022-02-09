@@ -49,19 +49,24 @@ public:
     void ordenarCrescentementeNosPorPeso(list<int> *listaCrescrenteNosPorPeso);
     void ordenarDecrescentementeNosPorGrau(list<int> *listaDecrescrenteNosPorGrau);
     void inicializacaoClusters(int clusters, list<int> *listaCrescrenteNosPorPeso, list<int> *listaDecrescrenteNosPorGrau, list<int> matrizCluster[], int matrizMenorMaiorCluster[][3]);
-    void atualizaSolucao(int clusters, Node *noAtual, list<int> matrizCluster[], int matrizMenorMaiorCluster[][3]);
-    void atualizaListaCandidatos(list<int> *listaCandidatos, int indice);
-    void algoritmoGuloso(int cluster);
+    void atualizaSolucao(int clusters, Node *noAtual, list<int> matrizCluster[], int matrizMenorMaiorCluster[][3], stack<int> *pilhaReservaVertices);
+    void atualizaListaCandidatos(list<int> *listaCandidatos, int indice, stack<int> *pilhaReservaVertices);
+    int algoritmoGuloso(int clusters);
     bool mantemConexidade(list<int> listaCluster,Node *noAtual);
-    void algoritmoGuloso2(int clusters, float alfa, int numIter);
-    void algoritmoGulosoRandomizado(int cluster, float alfa, int numIter);
-    void algoritmoGulosoRandomizadoReativo(int cluster);
+    int algoritmoGulosoRandomizado(int clusters, float alfa, int numIter);
+    int algoritmoGulosoRandomizadoReativo(int clusters, float alfas[], int numIter, int bloco);
     float** floyd();
 
 private:
     //Auxiliar methods
     Graph* subgrafoVerticeInduzido(list<int> listaNosIdRotulo);
     bool contidoNaLista(int elemento, list<int> lista);
+    int getElementoLista(list<int> lista, int indice);
+    void removeElementoLista(list<int> *lista, int indice);
     bool ehConexo();
+    void inicializaVetoresReativo(float probabilidades[], float medias[], int numElementos);
+    void atualizaProbabilidadesReativo(float probabilidades[], float medias[], int menorDiferenca, int numElementos);
+    float escolheAlfaReativo(float probabilidades[], float alfas[], int numElementos);
+    void atualizarMediasReativo(float medias[], int acumuladorDiferencas[], int contadorDiferencasPorAlfa[], int diferenca, float alfas[], float alfa, int numElemetos);
 };
 #endif //MGGPP_GRAPH_H
