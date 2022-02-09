@@ -235,8 +235,11 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file, int cluster){
         //Algoritmo Guloso
         case 2:{
             cout << "Caso 2" << endl;
+            output_file << "Algoritmo Guloso\n";
+
             int gap = graph->algoritmoGuloso(cluster);
             cout << "Gap: " << gap << endl;
+            output_file << "Gap: " + to_string(gap) + "\n";
 
             break;
         }

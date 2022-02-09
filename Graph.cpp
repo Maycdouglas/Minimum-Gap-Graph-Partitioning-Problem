@@ -896,10 +896,10 @@ bool Graph::mantemConexidade(list<int> listaCluster,Node *noAtual) {
 void Graph::inicializaVetoresReativo(float probabilidades[], float medias[], int numElementos) {
     float probabilidadeInicial = (float) (1.0 / numElementos) * 100;
 
-    cout << "Probabilidades: ";
+    // cout << "Probabilidades: ";
     for (int i = 0; i < numElementos; i++) {
         probabilidades[i] = probabilidadeInicial;
-        cout << probabilidades[i] << " ";
+        // cout << probabilidades[i] << " ";
         medias[i] = INFINITY;
     }
     cout << endl;
@@ -909,20 +909,20 @@ void Graph::atualizaProbabilidadesReativo(float probabilidades[], float medias[]
     float qi[10] = {0.0};
     float somatorioQi = 0;
 
-    cout << "Qi: ";
+    // cout << "Qi: ";
     for (int i = 0; i < numElementos; i++) {
         qi[i] = powf(menorDiferenca / medias[i], 10);
         somatorioQi += qi[i];
-        cout << qi[i] << " ";
+        // cout << qi[i] << " ";
     }
-    cout << endl;
+    // cout << endl;
 
-    cout << "Probabilidades: ";
+    // cout << "Probabilidades: ";
     for (int i = 0; i < numElementos; i++) {
         probabilidades[i] = (qi[i] / somatorioQi) * 100;
-        cout << probabilidades[i] << " ";
+        // cout << probabilidades[i] << " ";
     }
-    cout << endl;
+    // cout << endl;
 }
 
 float Graph::escolheAlfaReativo(float probabilidades[], float alfas[], int numElementos) {
@@ -933,17 +933,17 @@ float Graph::escolheAlfaReativo(float probabilidades[], float alfas[], int numEl
         probabilidadeAcumulada += probabilidades[i];
 
         if (numeroAleatorio <= probabilidadeAcumulada) {
-            cout << "Alfa: " << alfas[i] << endl;
+            // cout << "Alfa: " << alfas[i] << endl;
             return alfas[i];
         }
     }
-    cout << "ALFA QUE SOBROU";
+    // cout << "ALFA QUE SOBROU";
 
     return alfas[numElementos - 1];
 }
 
 void Graph::atualizarMediasReativo(float medias[], int acumuladorDiferencas[], int contadorDiferencasPorAlfa[], int diferenca, float alfas[], float alfa, int numElementos) {
-    cout << "Medias: ";
+    // cout << "Medias: ";
     for (int i = 0; i < numElementos; i++) {
         if (alfas[i] == alfa) {
             acumuladorDiferencas[i] += diferenca;
@@ -953,15 +953,15 @@ void Graph::atualizarMediasReativo(float medias[], int acumuladorDiferencas[], i
         }
     }
 
-    for (int i = 0; i < numElementos; i++) {
-        cout << medias[i] << " ";
-    }
-    cout << endl;
+    // for (int i = 0; i < numElementos; i++) {
+    //     cout << medias[i] << " ";
+    // }
+    // cout << endl;
 }
 
 int Graph::algoritmoGulosoRandomizadoReativo(int clusters, float alfas[], int numIter, int bloco) {
-    cout << "Algoritmo Guloso Randomizado Reativo" << endl;
-    cout << "CLUSTERS: " << clusters << endl;
+    // cout << "Algoritmo Guloso Randomizado Reativo" << endl;
+    // cout << "CLUSTERS: " << clusters << endl;
 
     list<int> *melhorSolucao = nullptr;
     int menorDiferenca = (int) INFINITY;
@@ -1030,8 +1030,8 @@ int Graph::algoritmoGulosoRandomizadoReativo(int clusters, float alfas[], int nu
             delete [] matrizCluster;
         }
 
-        cout << "Atual: " << diferencaSolucaoAtual << endl; 
-        cout << "Melhor: " << menorDiferenca << endl;
+        // cout << "Atual: " << diferencaSolucaoAtual << endl; 
+        // cout << "Melhor: " << menorDiferenca << endl;
     }
 
     delete [] melhorSolucao;
