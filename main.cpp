@@ -47,38 +47,7 @@ void exportarGrafo(Graph* graph, ofstream& output_file) {
 
 }
 
-Graph* leituraInstancia(ifstream& input_file, int directed, int weightedEdge, int weightedNode){
-
-    //Variaveis para auxiliar na criacao dos nos no Grafo
-    int idNodeSource;
-    int idNodeTarget;
-    int order;
-    //int numEdges;
-    int pesoAresta;
-
-    //Pegando a ordem do grafo
-    input_file >> order;
-
-    //Criando o grafo
-    Graph* graph = new Graph(0, directed, weightedEdge, weightedNode);
-
-
-    //Leitura de arquivo
-    if(weightedEdge){
-        while(input_file >> idNodeSource >> idNodeTarget >> pesoAresta) {
-            graph->insertEdge(idNodeSource, idNodeTarget, pesoAresta);
-        }
-    } else{
-        while(input_file >> idNodeSource >> idNodeTarget >> pesoAresta) {
-            graph->insertEdge(idNodeSource, idNodeTarget, 0);
-        }
-    }
-
-
-    return graph;
-}
-
-Graph* leituraInstancia2(ifstream& input_file, int directed, int weightedEdge, int weightedNode, int *cluster){
+Graph* leituraInstancia(ifstream& input_file, int directed, int weightedEdge, int weightedNode, int *cluster){
 
     //Variaveis para auxiliar na criacao dos nos no Grafo
     int idNodeSource;
@@ -232,82 +201,24 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file, int cluster){
             exportarGrafo(graph,output_file);
             break;
         }
-        //Algoritmo Guloso
+            //Algoritmo Guloso
         case 2:{
             cout << "Caso 2" << endl;
-            output_file << "Algoritmo Guloso\n";
-
-            int gap = graph->algoritmoGuloso(cluster);
-            cout << "Gap: " << gap << endl;
-            output_file << "Gap: " + to_string(gap) + "\n";
-
+            graph->algoritmoGuloso(cluster);
             break;
         }
 
-        //Algoritmo Guloso Randomizado
+            //Algoritmo Guloso Randomizado
         case 3:{
             cout << "Caso 3" << endl;
-            output_file << "Algoritmo Guloso Randomizado\n";
-
-            float alfas[3] = {0.1, 0.2, 0.3};
-
-            for (int i = 0; i < 3; i++) {
-                float alfa = alfas[i];
-                
-                string tituloAlfa = "ALFA: " + to_string(alfa);
-                cout << tituloAlfa << endl;
-                output_file << tituloAlfa + "\n";
-
-                cout << "----------------------------------" << endl;
-
-                for (int execucao = 1; execucao <= 30; execucao++) {
-                    auto tempoInicial = chrono::high_resolution_clock::now();
-
-                    int gap = graph->algoritmoGulosoRandomizado(cluster, alfa, 1000);
-                    
-                    auto tempoFinal = chrono::high_resolution_clock::now();
-                    auto duracaoEmSegundos = chrono::duration_cast<chrono::seconds>(tempoFinal - tempoInicial);
-                    
-                    string resultado = "Execucao: " + to_string(execucao);
-                    resultado += " - Gap: " + to_string(gap);
-                    resultado += " - Tempo de processamento: " + to_string(duracaoEmSegundos.count()) + " segundos";
-
-                    cout << resultado << endl;
-                    output_file << resultado + "\n";
-                }
-
-                cout << "----------------------------------" << endl;
-            }
-
+            graph->algoritmoGulosoRandomizado(cluster);
             break;
         }
 
-        //Algoritmo Guloso Randomizado Reativo
+            //Algoritmo Guloso Randomizado Reativo
         case 4:{
             cout << "Caso 4" << endl;
-            output_file << "Algoritmo Guloso Randomizado Reativo\n";
-
-            float alfas[10] = {0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50};
-            
-            cout << "----------------------------------" << endl;
-
-            for (int execucao = 1; execucao <= 30; execucao++) {
-                auto tempoInicial = chrono::high_resolution_clock::now();
-
-                int gap = graph->algoritmoGulosoRandomizadoReativo(cluster, alfas, 4000, 250);
-                
-                auto tempoFinal = chrono::high_resolution_clock::now();
-                auto duracaoEmSegundos = chrono::duration_cast<chrono::seconds>(tempoFinal - tempoInicial);
-                
-                string resultado = "Execucao: " + to_string(execucao);
-                resultado += " - Gap: " + to_string(gap);
-                resultado += " - Tempo de processamento: " + to_string(duracaoEmSegundos.count()) + " segundos";
-
-                cout << resultado << endl;
-                output_file << resultado + "\n";
-            }
-
-            cout << "----------------------------------" << endl;
+            graph->algoritmoGulosoRandomizadoReativo(cluster);
             break;
         }
 
@@ -373,7 +284,7 @@ int main(int argc, char const *argv[]) {
 
     if(input_file.is_open()){
 
-        graph = leituraInstancia2(input_file, atoi(argv[3]), atoi(argv[4]), atoi(argv[5]), &cluster);
+        graph = leituraInstancia(input_file, atoi(argv[3]), atoi(argv[4]), atoi(argv[5]), &cluster);
 
     }else
         cout << "Unable to open " << argv[1];
