@@ -10,6 +10,12 @@
 
 using namespace std;
 
+struct solucao
+{
+    int diferenca;
+    list<int> *clusters;
+};
+
 class Graph{
 
     //Atributes
@@ -50,10 +56,19 @@ public:
     void ordenarCrescentementeNosPorPeso(list<int> *listaCrescrenteNosPorPeso);
     void ordenarDecrescentementeNosPorGrau(list<int> *listaDecrescrenteNosPorGrau);
     void algoritmoGuloso(int cluster);
-    void algoritmoGulosoRandomizado(int cluster);
-    void algoritmoGulosoRandomizadoReativo(int cluster);
+    solucao algoritmoGulosoRandomizado(int clusters, float alfa, int numIter);
+    solucao algoritmoGulosoRandomizadoReativo(int clusters, float alfas[], int numIter, int bloco);
 
 private:
     //Auxiliar methods
+    int getElementoLista(list<int> lista, int indice);
+    void removeElementoLista(list<int> *lista, int indice);
+    void inicializacaoClusters(int clusters, list<int> *listaCrescrenteNosPorPeso, list<int> *listaDecrescrenteNosPorGrau, list<int> matrizCluster[], int matrizMenorMaiorCluster[][3]);
+    void atualizaSolucao(int clusters, Node *noAtual, list<int> matrizCluster[], int matrizMenorMaiorCluster[][3], stack<int> *pilhaReservaVertices);
+    void atualizaListaCandidatos(list<int> *listaCandidatos, int indice, stack<int> *pilhaReservaVertices);
+    void inicializaVetoresReativo(float probabilidades[], float medias[], int numElementos);
+    void atualizaProbabilidadesReativo(float probabilidades[], float medias[], int menorDiferenca, int numElementos);
+    float escolheAlfaReativo(float probabilidades[], float alfas[], int numElementos);
+    void atualizarMediasReativo(float medias[], int acumuladorDiferencas[], int contadorDiferencasPorAlfa[], int diferenca, float alfas[], float alfa, int numElemetos);
 };
 #endif //MGGPP_GRAPH_H
