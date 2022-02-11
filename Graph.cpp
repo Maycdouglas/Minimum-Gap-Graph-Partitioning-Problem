@@ -525,6 +525,7 @@ void Graph::algoritmoGuloso(int cluster) {
     list<list<int>> listaClusters;
     list<int> *ponteiroLista;
     list<vector<int>> menorMaiorPesosClusters; //[0] = menorPeso, [1] = maiorPeso, [2] = diferença entre pesos
+    list<vector<int>> listaCandidatos; //ID do candidato (posicao dele na lista de Clusters), [1] = Diferença de peso caso escolha o candidato
     vector<int> *ponteiroVector;
 
     list<int> listaCrescrenteNosPorPeso; // Lista que armazena os ID's ROTULO dos Vertices
@@ -533,6 +534,8 @@ void Graph::algoritmoGuloso(int cluster) {
     cout << "Tamanho da lista Cluters antes " << listaClusters.size() << endl;
     Node *noAtual = this->first_node;
 
+    //Loop responsável por popular a listaClusters e tambem a lista de vectors
+    //Aqui precisa rolar a ordenacao por peso
     for(int i = 0; i < this->order; i++){
         ponteiroLista = new list<int>;
         ponteiroVector = new vector<int>;
@@ -552,8 +555,12 @@ void Graph::algoritmoGuloso(int cluster) {
     Edge *arestaAtual;
     Node *noLeveAtual, *noPesadoAtual, *noLeveAlvo, *noPesadoAlvo;
     int novoPesoLeve, novoPesoLeveAux, novoPesoPesado, novoPesoPesadoAux, menorDiferenca;
-    list<vector<int>>::iterator itMenorMaiorPesosClusters, itMenorMaiorPesosClustersAlvo, itMenorMaiorPesosClustersAux;
+    list<vector<int>>::iterator itMenorMaiorPesosClusters, itMenorMaiorPesosClustersAlvo, itMenorMaiorPesosClustersAux, itListaCandidatos;
     list<list<int>>::iterator itClusterAux;
+
+
+
+    int contadorID;
 
     while(listaClusters.size() > cluster){
 
@@ -580,7 +587,7 @@ void Graph::algoritmoGuloso(int cluster) {
             }
 
             itMenorMaiorPesosClustersAlvo = menorMaiorPesosClusters.begin();
-
+            contadorID = 0;
             //percorre a lista de listas novamente para verificar a conexidade entre o cluster atual com os demais
             for(auto itListaClusters = listaClusters.begin(); itListaClusters != listaClusters.end(); itListaClusters++, itMenorMaiorPesosClustersAlvo++){
                 //verifica se nao eh o mesmo cluster que estamos verificando conexidade
@@ -594,6 +601,12 @@ void Graph::algoritmoGuloso(int cluster) {
                             novoPesoLeve = min(noLeveAtual->getWeight(),noLeveAlvo->getWeight());
                             novoPesoPesado = max(noPesadoAtual->getWeight(),noPesadoAlvo->getWeight());
 
+                            //Aqui precisa inserir na lista de candidatos
+
+
+
+
+                            //Esse IF vai ser inutilizado depois, pois só serve quando nao tem os alfas
                             if(novoPesoPesado - novoPesoLeve < menorDiferenca){
                                 menorDiferenca = novoPesoPesado - novoPesoLeve;
                                 itClusterAux = itListaClusters;
@@ -605,7 +618,12 @@ void Graph::algoritmoGuloso(int cluster) {
                         }
                     }
                 }
+                contadorID++;
             }
+
+            //Aqui escolheriamos o candidato
+
+
 
             it->merge(*itClusterAux);
             listaClusters.erase(itClusterAux);
