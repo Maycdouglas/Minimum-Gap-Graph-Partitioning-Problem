@@ -1,1 +1,29 @@
+Algoritmo Guloso
+Gap: 18146
 
+Algoritmo Guloso Randomizado
+ALFA: 0.100000
+Execucao: 1 - Gap: 15137 - Tempo de processamento: 330 segundos
+Execucao: 2 - Gap: 15370 - Tempo de processamento: 327 segundos
+Execucao: 3 - Gap: 15611 - Tempo de processamento: 323 segundos
+Execucao: 4 - Gap: 15125 - Tempo de processamento: 328 segundos
+Execucao: 5 - Gap: 15551 - Tempo de processamento: 327 segundos
+Execucao: 6 - Gap: 15535 - Tempo de processamento: 329 segundos
+Execucao: 7 - Gap: 15503 - Tempo de processamento: 330 segundos
+Execucao: 8 - Gap: 15705 - Tempo de processamento: 328 segundos
+Execucao: 9 - Gap: 15250 - Tempo de processamento: 327 segundos
+Execucao: 10 - Gap: 15009 - Tempo de processamento: 327 segundos
+Execucao: 11 - Gap: 15300 - Tempo de processamento: 326 segundos
+Execucao: 12 - Gap: 15558 - Tempo de processamento: 323 segundos
+Execucao: 13 - Gap: 15003 - Tempo de processamento: 322 segundos
+Execucao: 14 - Gap: 15026 - Tempo de processamento: 322 segundos
+Execucao: 15 - Gap: 15113 - Tempo de processamento: 322 segundos
+Execucao: 16 - Gap: 15195 - Tempo de processamento: 321 segundos
+Execucao: 17 - Gap: 15615 - Tempo de processamento: 321 segundos
+Execucao: 18 - Gap: 15566 - Tempo de processamento: 321 segundos
+Execucao: 19 - Gap: 15677 - Tempo de processamento: 321 segundos
+Execucao: 20 - Gap: 15453 - Tempo de processamento: 321 segundos
+Execucao: 21 - Gap: 15462 - Tempo de processamento: 321 segundos
+Execucao: 22 - Gap: 15157 - Tempo de processamento: 321 segundos
+Execucao: 23 - Gap: 15330 - Tempo de processamento: 321 segundos
+Execucao: 24 - Gap: 15428 - Tempo de processamento: 322 segundos
