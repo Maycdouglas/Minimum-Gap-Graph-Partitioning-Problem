@@ -562,6 +562,40 @@ void Graph::conhecerVizinhanca(list<int> *listaVerticesVizinhos, list<int>::iter
     }
 }
 
+void Graph::buscarConexidade(list<int> *listaVerticesVizinhos, list<int> *idListaCandidatos, list<int> *pesoListaCandidatos, list<int>::iterator itPesoListaCandidatos, list<int>::iterator itIdListaCandidatos, list<int>::iterator  itElementosCluster, list<list<int>>::iterator itListaClustersAux,list<list<int>>::iterator itListaClusters,int posicaoClusterAlvo){
+
+    int pesoLeveClusterAtual, pesoPesadoClusterAtual, pesoLeveClusterAlvo, pesoPesadoClusterAlvo, novoPesoLeve, novoPesoPesado;
+
+    for(itElementosCluster = itListaClustersAux->begin(); itElementosCluster != itListaClustersAux->end(); itElementosCluster++){
+        //Verifica se o elemento pertence a lista de vertices vizinhos do cluster atual
+        if(contidoNaLista(*itElementosCluster,*listaVerticesVizinhos)){
+            //Recebe os pesos minimos e maximos de cada cluster
+            pesoLeveClusterAtual = itListaClusters->front();
+            pesoPesadoClusterAtual = itListaClusters->back();
+            pesoLeveClusterAlvo = itListaClustersAux->front();
+            pesoPesadoClusterAlvo = itListaClustersAux->back();
+
+            //Seleciona o menor peso minimo e o maior peso maximo
+            novoPesoLeve = min(pesoLeveClusterAtual,pesoLeveClusterAlvo);
+            novoPesoPesado = max(pesoPesadoClusterAtual,pesoPesadoClusterAlvo);
+
+            //Caso a lista esteja vazia ou o novo peso seja maior q o ultimo, já insere automaticamente no final
+            if(pesoListaCandidatos->empty() || novoPesoPesado - novoPesoLeve > pesoListaCandidatos->back()){
+                pesoListaCandidatos->push_back(novoPesoPesado - novoPesoLeve);
+                idListaCandidatos->push_back(posicaoClusterAlvo);
+                //caso contrario, insere ordenamente na lista de pesos
+            } else {
+                for(itPesoListaCandidatos = pesoListaCandidatos->begin(), itIdListaCandidatos = idListaCandidatos->begin(); itPesoListaCandidatos != pesoListaCandidatos->end(); itPesoListaCandidatos++, itIdListaCandidatos++){
+                    if(novoPesoPesado - novoPesoLeve < *itPesoListaCandidatos){
+                        pesoListaCandidatos->insert(itPesoListaCandidatos,novoPesoPesado - novoPesoLeve);
+                        idListaCandidatos->insert(itIdListaCandidatos,posicaoClusterAlvo);
+                    }
+                }
+            }
+        }
+    }
+}
+
 void Graph::algoritmoGuloso(int cluster) {
     cout << "Algoritmo Guloso" << endl;
     cout << "CLUSTER: " << cluster << endl;
@@ -579,8 +613,6 @@ void Graph::algoritmoGuloso(int cluster) {
 
     cout << "Tamanho da lista de Clusters antes " << listaClusters.size() << endl;
 
-
-
     //Funcao responsavel por dividir cada nó em um cluster
     gerarClusters(&listaClusters,itListaClusters);
 
@@ -589,7 +621,7 @@ void Graph::algoritmoGuloso(int cluster) {
     list<int> listaVerticesVizinhos;
 
     list<int>::iterator  itElementosCluster, itElementosClusterAux, itGuardaUltimaInsercao;
-    int posicaoClusterAlvo, tamanhoListasCandidatos;
+    int posicaoClusterAlvo;
     int pesoLeveClusterAtual, pesoPesadoClusterAtual, pesoLeveClusterAlvo, pesoPesadoClusterAlvo, novoPesoLeve, novoPesoPesado;
     int idClusterEscolhido, pesoClusterEscolhido;
 
@@ -617,35 +649,8 @@ void Graph::algoritmoGuloso(int cluster) {
                 //verifica se nao eh o cluster que estamos atualmente
                 if(itListaClustersAux != itListaClusters){
                     //percorre os elementos do cluster para encontrar conexidade
-                    //criar funcao buscarConexidade
-                    for(itElementosCluster = itListaClustersAux->begin(); itElementosCluster != itListaClustersAux->end(); itElementosCluster++){
-                        //Verifica se o elemento pertence a lista de vertices vizinhos do cluster atual
-                        if(contidoNaLista(*itElementosCluster,listaVerticesVizinhos)){
-                            //Recebe os pesos minimos e maximos de cada cluster
-                            pesoLeveClusterAtual = itListaClusters->front();
-                            pesoPesadoClusterAtual = itListaClusters->back();
-                            pesoLeveClusterAlvo = itListaClustersAux->front();
-                            pesoPesadoClusterAlvo = itListaClustersAux->back();
-
-                            //Seleciona o menor peso minimo e o maior peso maximo
-                            novoPesoLeve = min(pesoLeveClusterAtual,pesoLeveClusterAlvo);
-                            novoPesoPesado = max(pesoPesadoClusterAtual,pesoPesadoClusterAlvo);
-
-                            //Caso a lista esteja vazia ou o novo peso seja maior q o ultimo, já insere automaticamente no final
-                            if(pesoListaCandidatos.empty() || novoPesoPesado - novoPesoLeve > pesoListaCandidatos.back()){
-                                pesoListaCandidatos.push_back(novoPesoPesado - novoPesoLeve);
-                                idListaCandidatos.push_back(posicaoClusterAlvo);
-                            //caso contrario, insere ordenamente na lista de pesos
-                            } else {
-                                for(itPesoListaCandidatos = pesoListaCandidatos.begin(), itIdListaCandidatos = idListaCandidatos.begin(); itPesoListaCandidatos != pesoListaCandidatos.end(); itPesoListaCandidatos++, itIdListaCandidatos++){
-                                    if(novoPesoPesado - novoPesoLeve < *itPesoListaCandidatos){
-                                        pesoListaCandidatos.insert(itPesoListaCandidatos,novoPesoPesado - novoPesoLeve);
-                                        idListaCandidatos.insert(itIdListaCandidatos,posicaoClusterAlvo);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    //talvez dê para fazer essa funcao pegar o for e if anterior
+                    buscarConexidade(&listaVerticesVizinhos,&idListaCandidatos,&pesoListaCandidatos,itPesoListaCandidatos,itIdListaCandidatos,itElementosCluster,itListaClustersAux, itListaClusters,posicaoClusterAlvo);
                 }
                 posicaoClusterAlvo++;
             }

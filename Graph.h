@@ -64,6 +64,7 @@ private:
     //Auxiliar methods
     void conhecerVizinhanca(list<int> *listaVerticesVizinhos, list<int>::iterator  itElementosCluster, list<list<int>>::iterator itListaClusters);
     void gerarClusters(list<list<int>> *listaClusters, list<list<int>>::iterator itListaClusters);
+    void buscarConexidade(list<int> *listaVerticesVizinhos, list<int> *idListaCandidatos, list<int> *pesoListaCandidatos, list<int>::iterator itPesoListaCandidatos, list<int>::iterator itIdListaCandidatos, list<int>::iterator  itElementosCluster, list<list<int>>::iterator itListaClustersAux,list<list<int>>::iterator itListaClusters,int posicaoClusterAlvo);
     int getElementoLista(list<int> lista, int indice);
     void removeElementoLista(list<int> *lista, int indice);
     void inicializacaoClusters(int clusters, list<int> *listaCrescrenteNosPorPeso, list<int> *listaDecrescrenteNosPorGrau, list<int> matrizCluster[], int matrizMenorMaiorCluster[][3]);
