@@ -518,39 +518,27 @@ void Graph::atualizaListaCandidatos(list<int> *listaCandidatos, int indice, stac
     }
 }
 
-void Graph::testeVector() {
-    list<vector<int>> menorMaiorPesosClusters; //[0] = menorPeso, [1] = maiorPeso, [2] = diferença entre pesos
-    cout << "Tamanho da lista de vetores: " << menorMaiorPesosClusters.size() << endl;
-
-    menorMaiorPesosClusters.resize(2);
-
-    cout << "Tamanho novo da lista de vetores: " << menorMaiorPesosClusters.size() << endl;
-
-    cout << "TAMANHO DO VETOR: " << menorMaiorPesosClusters.back().size() << endl;
-
-    menorMaiorPesosClusters.front().push_back(10);
-
-    cout << menorMaiorPesosClusters.front().front() << endl;
-
-}
-
 void Graph::gerarClusters(list<list<int>> *listaClusters, list<list<int>>::iterator itListaClusters){
+
     Node *noAtual = this->first_node;
+
     for(itListaClusters = listaClusters->begin(); itListaClusters != listaClusters->end(); itListaClusters++){
         itListaClusters->push_back(noAtual->getIdRotulo()); //popula cada cluster
         noAtual = noAtual->getNextNode();
     }
 }
 
-void Graph::conhecerVizinhanca(list<int> *listaVerticesVizinhos, list<int>::iterator  itElementosCluster, list<list<int>>::iterator itListaClusters){
+void Graph::conhecerVizinhanca(list<int> *listaVerticesVizinhos, list<list<int>>::iterator itListaClusters){
 
     Node *noAtual;
     Edge *arestaAtual;
+    list<int>::iterator  itElementosCluster;
 
     for(itElementosCluster = itListaClusters->begin(); itElementosCluster != itListaClusters->end(); itElementosCluster++){
-        cout << "Tamanho da lista do cluster" << itListaClusters->size() << endl;
+
         noAtual = getNodeByRotulo(*itElementosCluster);
         arestaAtual = noAtual->getFirstEdge();
+
         //Percorre as arestas do elemento atual da lista de elementos de um cluster
         while(arestaAtual != nullptr){
             //verifica se o elemento ja foi inserido na lista de vizinhos dos elementos do cluster
@@ -562,8 +550,9 @@ void Graph::conhecerVizinhanca(list<int> *listaVerticesVizinhos, list<int>::iter
     }
 }
 
-void Graph::buscarConexidade(list<int> *listaVerticesVizinhos, list<int> *idListaCandidatos, list<int> *pesoListaCandidatos, list<int>::iterator itPesoListaCandidatos, list<int>::iterator itIdListaCandidatos, list<int>::iterator  itElementosCluster, list<list<int>>::iterator itListaClustersAux,list<list<int>>::iterator itListaClusters,int posicaoClusterAlvo){
+void Graph::buscarConexidade(list<int> *listaVerticesVizinhos, list<int> *idListaCandidatos, list<int> *pesoListaCandidatos, list<list<int>>::iterator itListaClustersAux,list<list<int>>::iterator itListaClusters,int posicaoClusterAlvo){
 
+    list<int>::iterator itIdListaCandidatos, itPesoListaCandidatos, itElementosCluster;
     int pesoLeveClusterAtual, pesoPesadoClusterAtual, pesoLeveClusterAlvo, pesoPesadoClusterAlvo, novoPesoLeve, novoPesoPesado;
 
     for(itElementosCluster = itListaClustersAux->begin(); itElementosCluster != itListaClustersAux->end(); itElementosCluster++){
@@ -589,11 +578,47 @@ void Graph::buscarConexidade(list<int> *listaVerticesVizinhos, list<int> *idList
                     if(novoPesoPesado - novoPesoLeve < *itPesoListaCandidatos){
                         pesoListaCandidatos->insert(itPesoListaCandidatos,novoPesoPesado - novoPesoLeve);
                         idListaCandidatos->insert(itIdListaCandidatos,posicaoClusterAlvo);
+                        break;
                     }
                 }
             }
         }
     }
+}
+
+void Graph::inserirOrdenamente(list<list<int>>::iterator itListaClusters, list<list<int>>::iterator itListaClustersAux){
+
+    list<int>::iterator itElementosCluster, itElementosClusterAux;
+
+    for(itElementosClusterAux = itListaClustersAux->begin(); itElementosClusterAux != itListaClustersAux->end(); itElementosClusterAux++){
+        if(*itElementosClusterAux > itListaClusters->back()){
+            itListaClusters->push_back(*itElementosClusterAux);
+        } else {
+            for(itElementosCluster = itListaClusters->begin(); itElementosCluster != itListaClusters->end(); itElementosCluster++){
+                if(*itElementosClusterAux < *itElementosCluster){
+                    itListaClusters->insert(itElementosCluster,*itElementosClusterAux);
+                    break;
+                }
+            }
+        }
+    }
+}
+
+void Graph::registrarResultado(list<list<int>> *listaClusters){
+
+    int soma = 0;
+    list<list<int>>::iterator itListaClusters;
+
+    for(itListaClusters = listaClusters->begin(); itListaClusters != listaClusters->end(); itListaClusters++) {
+        cout << "Tamanho do cluster: " << itListaClusters->size() << endl;
+        for(auto it = itListaClusters->begin(); it != itListaClusters->end(); it++){
+            cout << *it << " ";
+        }
+        cout << endl;
+        cout << "Diferenca no CLuster: " <<itListaClusters->back() - itListaClusters->front() << endl;
+        soma = soma + itListaClusters->back() - itListaClusters->front();
+    }
+    cout << "SOMA = " << soma << endl;
 }
 
 void Graph::algoritmoGuloso(int cluster) {
@@ -604,63 +629,34 @@ void Graph::algoritmoGuloso(int cluster) {
     list<list<int>>::iterator itListaClusters, itListaClustersAux; //Iterator da lista de Clusters;
 
     list<int> idListaCandidatos, pesoListaCandidatos; //Listas que armazenam a posicao dos clusters candidatos e o peso atualizado caso ocorra o merge
-    list<int>::iterator itIdListaCandidatos;
-    list<int>::iterator itPesoListaCandidatos;
-
-//    list<int> listaCrescenteNosPorPeso;
-//    list<int>::iterator  itListaCrescente;
-//    ordenarCrescentementeNosPorPeso(&listaCrescenteNosPorPeso);
-
-    cout << "Tamanho da lista de Clusters antes " << listaClusters.size() << endl;
 
     //Funcao responsavel por dividir cada nó em um cluster
     gerarClusters(&listaClusters,itListaClusters);
 
-    cout << "Tamanho da lista Cluters depois: " << listaClusters.size() << endl;
-
     list<int> listaVerticesVizinhos;
 
-    list<int>::iterator  itElementosCluster, itElementosClusterAux, itGuardaUltimaInsercao;
     int posicaoClusterAlvo;
-    int pesoLeveClusterAtual, pesoPesadoClusterAtual, pesoLeveClusterAlvo, pesoPesadoClusterAlvo, novoPesoLeve, novoPesoPesado;
     int idClusterEscolhido, pesoClusterEscolhido;
 
     //Loop principal, responsável por tornar a lista de clusters do tamanho certo que a instancia pede
     while(listaClusters.size() > cluster){
         //Loop responsável por percorrer cada lista da lista de clusters, para realizar o merge no final
         for(itListaClusters = listaClusters.begin(); itListaClusters != listaClusters.end(); itListaClusters++){
-            //esse for é temporario, será apagado no trabalho final
-            for(auto it2 = listaClusters.begin(); it2 != listaClusters.end(); it2++) {
-                cout << "Tamanho do cluster: " << it2->size() << endl;
-                cout << "MEMBROS DO CLUSTER: " << endl;
-                for(auto it = it2->begin(); it != it2->end(); it++){
-                    cout << *it << " ";
-                }
-                cout << endl;
-            }
 
             //Primeiramente percorremos a lista de elementos do cluster para descobrir seus vertices vizinhos
-            conhecerVizinhanca(&listaVerticesVizinhos,itElementosCluster,itListaClusters);
+            conhecerVizinhanca(&listaVerticesVizinhos,itListaClusters);
 
             posicaoClusterAlvo = 1;
 
             //Novamente percorremos a lista de clusters, dessa vez em busca dos clusters conexos ao que estamos atualmente
+            cout << "Tamanho da lista de Candidatos antes de buscar conexidade: " << idListaCandidatos.size() << " " << pesoListaCandidatos.size() << endl;
             for(itListaClustersAux = listaClusters.begin(); itListaClustersAux != listaClusters.end(); itListaClustersAux++){
-                //verifica se nao eh o cluster que estamos atualmente
+                //Verifica se nao eh o cluster que estamos atualmente
                 if(itListaClustersAux != itListaClusters){
-                    //percorre os elementos do cluster para encontrar conexidade
-                    //talvez dê para fazer essa funcao pegar o for e if anterior
-                    buscarConexidade(&listaVerticesVizinhos,&idListaCandidatos,&pesoListaCandidatos,itPesoListaCandidatos,itIdListaCandidatos,itElementosCluster,itListaClustersAux, itListaClusters,posicaoClusterAlvo);
+                    //Percorre os elementos do cluster para encontrar conexidade
+                    buscarConexidade(&listaVerticesVizinhos,&idListaCandidatos,&pesoListaCandidatos,itListaClustersAux, itListaClusters,posicaoClusterAlvo);
                 }
                 posicaoClusterAlvo++;
-            }
-
-            cout << "Tamanho da lista de pesos dos candidatos: " << pesoListaCandidatos.size() << endl;
-            cout << "Tamanho da lista de ids dos candidatos: " << idListaCandidatos.size() << endl;
-
-            cout << "Lista de Candidatos: " << endl;
-            for(itPesoListaCandidatos = pesoListaCandidatos.begin(), itIdListaCandidatos = idListaCandidatos.begin(); itPesoListaCandidatos != pesoListaCandidatos.end(); itPesoListaCandidatos++, itIdListaCandidatos++){
-                cout << "ID: " << *itIdListaCandidatos << " PESO: " << *itPesoListaCandidatos << endl;
             }
 
             if(!idListaCandidatos.empty()){
@@ -674,47 +670,23 @@ void Graph::algoritmoGuloso(int cluster) {
                     itListaClustersAux++;
                 }
 
-                //Criar funcao inserirOrdenamente (talvez essa funcao possa ate ser usada em outro lugar do codigo acima)
                 //Aqui inserimos cada elemento do cluster escolhido no cluster atual de forma ordenada
-                itGuardaUltimaInsercao = itListaClusters->begin();
-                for(itElementosClusterAux = itListaClustersAux->begin(); itElementosClusterAux != itListaClustersAux->end(); itElementosClusterAux++){
-                    if(*itElementosClusterAux > itListaClusters->back()){
-                        itListaClusters->push_back(*itElementosClusterAux);
-                    } else {
-                        for(itElementosCluster = itGuardaUltimaInsercao; itElementosCluster != itListaClusters->end(); itElementosCluster++){
-                            if(*itElementosClusterAux < *itElementosCluster){
-                                itListaClusters->insert(itElementosCluster,*itElementosClusterAux);
-                                itGuardaUltimaInsercao = itElementosCluster;
-                                break;
-                            }
-                        }
-                    }
-                }
+                inserirOrdenamente(itListaClusters,itListaClustersAux);
 
                 listaClusters.erase(itListaClustersAux);
-
                 pesoListaCandidatos.clear();
                 idListaCandidatos.clear();
             }
+
+            listaVerticesVizinhos.clear();
 
             if(listaClusters.size() == cluster){
                 break;
             }
         }
-
     }
     //criar funcao registrarResultado (Nela vamos imprimir na tela e também anotar no TXT
-    int soma = 0;
-    for(itListaClusters = listaClusters.begin(); itListaClusters != listaClusters.end(); itListaClusters++) {
-        cout << "Tamanho do cluster: " << itListaClusters->size() << endl;
-        for(auto it = itListaClusters->begin(); it != itListaClusters->end(); it++){
-            cout << *it << " ";
-        }
-        cout << endl;
-        cout << "Diferenca no CLuster: " <<itListaClusters->back() - itListaClusters->front() << endl;
-        soma = soma + itListaClusters->back() - itListaClusters->front();
-    }
-    cout << "SOMA = " << soma << endl;
+    registrarResultado(&listaClusters);
 }
 
 solucao Graph::algoritmoGulosoRandomizado(int clusters, float alfa, int numIter) {

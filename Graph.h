@@ -58,13 +58,14 @@ public:
     void algoritmoGuloso(int cluster);
     solucao algoritmoGulosoRandomizado(int clusters, float alfa, int numIter);
     solucao algoritmoGulosoRandomizadoReativo(int clusters, float alfas[], int numIter, int bloco);
-    void testeVector();
 
 private:
     //Auxiliar methods
-    void conhecerVizinhanca(list<int> *listaVerticesVizinhos, list<int>::iterator  itElementosCluster, list<list<int>>::iterator itListaClusters);
+    void conhecerVizinhanca(list<int> *listaVerticesVizinhos, list<list<int>>::iterator itListaClusters);
     void gerarClusters(list<list<int>> *listaClusters, list<list<int>>::iterator itListaClusters);
-    void buscarConexidade(list<int> *listaVerticesVizinhos, list<int> *idListaCandidatos, list<int> *pesoListaCandidatos, list<int>::iterator itPesoListaCandidatos, list<int>::iterator itIdListaCandidatos, list<int>::iterator  itElementosCluster, list<list<int>>::iterator itListaClustersAux,list<list<int>>::iterator itListaClusters,int posicaoClusterAlvo);
+    void buscarConexidade(list<int> *listaVerticesVizinhos, list<int> *idListaCandidatos, list<int> *pesoListaCandidatos, list<list<int>>::iterator itListaClustersAux,list<list<int>>::iterator itListaClusters,int posicaoClusterAlvo);
+    void inserirOrdenamente(list<list<int>>::iterator itListaClusters, list<list<int>>::iterator itListaClustersAux);
+    void registrarResultado(list<list<int>> *listaClusters);
     int getElementoLista(list<int> lista, int indice);
     void removeElementoLista(list<int> *lista, int indice);
     void inicializacaoClusters(int clusters, list<int> *listaCrescrenteNosPorPeso, list<int> *listaDecrescrenteNosPorGrau, list<int> matrizCluster[], int matrizMenorMaiorCluster[][3]);
