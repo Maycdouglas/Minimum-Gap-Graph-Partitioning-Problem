@@ -56,8 +56,10 @@ public:
     void ordenarCrescentementeNosPorPeso(list<int> *listaCrescrenteNosPorPeso);
     void ordenarDecrescentementeNosPorGrau(list<int> *listaDecrescrenteNosPorGrau);
     void algoritmoGuloso(int cluster);
+    void algoritmoGuloso2(int cluster);
     solucao algoritmoGulosoRandomizado(int clusters, float alfa, int numIter);
     solucao algoritmoGulosoRandomizadoReativo(int clusters, float alfas[], int numIter, int bloco);
+    void testeVector();
 
 private:
     //Auxiliar methods

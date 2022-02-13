@@ -204,6 +204,7 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file, int cluster){
             //Algoritmo Guloso
         case 2:{
             cout << "Caso 2" << endl;
+//            graph->testeVector();
             graph->algoritmoGuloso(cluster);
             break;
         }

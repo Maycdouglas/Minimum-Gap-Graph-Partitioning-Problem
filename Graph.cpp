@@ -518,15 +518,202 @@ void Graph::atualizaListaCandidatos(list<int> *listaCandidatos, int indice, stac
     }
 }
 
+void Graph::testeVector() {
+    list<vector<int>> menorMaiorPesosClusters; //[0] = menorPeso, [1] = maiorPeso, [2] = diferença entre pesos
+    cout << "Tamanho da lista de vetores: " << menorMaiorPesosClusters.size() << endl;
+
+    menorMaiorPesosClusters.resize(2);
+
+    cout << "Tamanho novo da lista de vetores: " << menorMaiorPesosClusters.size() << endl;
+
+    cout << "TAMANHO DO VETOR: " << menorMaiorPesosClusters.back().size() << endl;
+
+    menorMaiorPesosClusters.front().push_back(10);
+
+    cout << menorMaiorPesosClusters.front().front() << endl;
+
+}
+
 void Graph::algoritmoGuloso(int cluster) {
     cout << "Algoritmo Guloso" << endl;
     cout << "CLUSTER: " << cluster << endl;
 
-    list<list<int>> listaClusters;
-    list<int> *ponteiroLista;
+    list<list<int>> listaClusters(this->order); //Lista responsavel por armazenar as listas que armazenam os membros de cada cluster;
+    list<list<int>>::iterator itListaClusters, itListaClustersAux; //Iterator da lista de Clusters;
+
+    //list<vector<int>> menorMaiorDiferencaPesosClusters(this->order); //[0] = menorPeso, [1] = maiorPeso, [2] = diferença entre pesos
+    //list<vector<int>>::iterator itMMDPC; //Iterator da lista de vetores acima
+
+    list<int> idListaCandidatos, pesoListaCandidatos; //Listas que armazenam a posicao dos clusters candidatos e o peso atualizado caso ocorra o merge
+    list<int>::iterator itIdListaCandidatos;
+    list<int>::iterator itPesoListaCandidatos;
+
+    list<int> listaCrescenteNosPorPeso;
+    list<int>::iterator  itListaCrescente;
+    ordenarCrescentementeNosPorPeso(&listaCrescenteNosPorPeso);
+
+    cout << "Tamanho da lista de Clusters antes " << listaClusters.size() << endl;
+
+    Node *noAtual = getNodeByRotulo(listaCrescenteNosPorPeso.front());
+
+    //Loop responsavel por dividir cada nó em um cluster e inserir as informacoes na lista de vetores que auxilia a lista de clusters
+    for(itListaClusters = listaClusters.begin(), itListaCrescente = listaCrescenteNosPorPeso.begin(); itListaClusters != listaClusters.end(); itListaClusters++, itListaCrescente++){
+        itListaClusters->push_back(*itListaCrescente); //popula cada cluster
+
+//        itMMDPC->push_back(noAtual->getWeight());
+//        itMMDPC->push_back(noAtual->getWeight());
+//        itMMDPC->push_back(0);
+
+        noAtual = getNodeByRotulo(*itListaCrescente);
+    }
+
+    cout << "Tamanho da lista Cluters depois: " << listaClusters.size() << endl;
+
+    list<int> listaVerticesVizinhos;
+    Edge *arestaAtual;
+    list<int>::iterator  itElementosCluster, itElementosClusterAux, itGuardaUltimaInsercao;
+    int posicaoClusterAlvo, tamanhoListasCandidatos;
+    int pesoLeveClusterAtual, pesoPesadoClusterAtual, pesoLeveClusterAlvo, pesoPesadoClusterAlvo, novoPesoLeve, novoPesoPesado;
+    int idClusterEscolhido, pesoClusterEscolhido;
+
+    //Loop principal, responsável por tornar a lista de clusters do tamanho certo que a instancia pede
+    while(listaClusters.size() > cluster){
+        //Loop responsável por percorrer cada lista da lista de clusters, para realizar o merge no final
+        for(itListaClusters = listaClusters.begin(); itListaClusters != listaClusters.end(); itListaClusters++){
+            for(auto it2 = listaClusters.begin(); it2 != listaClusters.end(); it2++) {
+                cout << "Tamanho do cluster: " << it2->size() << endl;
+                cout << "MEMBROS DO CLUSTER: " << endl;
+                for(auto it = it2->begin(); it != it2->end(); it++){
+                    cout << *it << " ";
+                }
+                cout << endl;
+            }
+            //Primeiramente percorremos a lista de elementos do cluster para descobrir seus vertices vizinhos
+            for(itElementosCluster = itListaClusters->begin(); itElementosCluster != itListaClusters->end(); itElementosCluster++){
+                cout << "Tamanho da lista do cluster" << itListaClusters->size() << endl;
+                noAtual = getNodeByRotulo(*itElementosCluster);
+                arestaAtual = noAtual->getFirstEdge();
+                //Percorre as arestas do elemento atual da lista de elementos de um cluster
+                while(arestaAtual != nullptr){
+                    //verifica se o elemento ja foi inserido na lista de vizinhos dos elementos do cluster
+                    if(!contidoNaLista(arestaAtual->getTargetIdRotulo(),listaVerticesVizinhos)){
+                        listaVerticesVizinhos.push_back(arestaAtual->getTargetIdRotulo());
+                    }
+                    arestaAtual = arestaAtual->getNextEdge();
+                }
+            }
+
+            posicaoClusterAlvo = 1;
+
+            //Novamente percorremos a lista de clusters, dessa vez em busca dos clusters conexos ao que estamos atualmente
+            for(itListaClustersAux = listaClusters.begin(); itListaClustersAux != listaClusters.end(); itListaClustersAux++){
+                //verifica se nao eh o cluster que estamos atualmente
+                if(itListaClustersAux != itListaClusters){
+                    //percorre os elementos do cluster para encontrar conexidade
+                    for(itElementosCluster = itListaClustersAux->begin(); itElementosCluster != itListaClustersAux->end(); itElementosCluster++){
+                        //Verifica se o elemento pertence a lista de vertices vizinhos do cluster atual
+                        if(contidoNaLista(*itElementosCluster,listaVerticesVizinhos)){
+                            //Recebe os pesos minimos e maximos de cada cluster
+                            pesoLeveClusterAtual = itListaClusters->front();
+                            pesoPesadoClusterAtual = itListaClusters->back();
+                            pesoLeveClusterAlvo = itListaClustersAux->front();
+                            pesoPesadoClusterAlvo = itListaClustersAux->back();
+
+                            //Seleciona o menor peso minimo e o maior peso maximo
+                            novoPesoLeve = min(pesoLeveClusterAtual,pesoLeveClusterAlvo);
+                            novoPesoPesado = max(pesoPesadoClusterAtual,pesoPesadoClusterAlvo);
+
+                            //Caso a lista esteja vazia ou o novo peso seja maior q o ultimo, já insere automaticamente no final
+                            if(pesoListaCandidatos.empty() || novoPesoPesado - novoPesoLeve > pesoListaCandidatos.back()){
+                                pesoListaCandidatos.push_back(novoPesoPesado - novoPesoLeve);
+                                idListaCandidatos.push_back(posicaoClusterAlvo);
+                            //caso contrario, insere ordenamente na lista de pesos
+                            } else {
+                                for(itPesoListaCandidatos = pesoListaCandidatos.begin(), itIdListaCandidatos = idListaCandidatos.begin(); itPesoListaCandidatos != pesoListaCandidatos.end(); itPesoListaCandidatos++, itIdListaCandidatos++){
+                                    if(novoPesoPesado - novoPesoLeve < *itPesoListaCandidatos){
+                                        pesoListaCandidatos.insert(itPesoListaCandidatos,novoPesoPesado - novoPesoLeve);
+                                        idListaCandidatos.insert(itIdListaCandidatos,posicaoClusterAlvo);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                posicaoClusterAlvo++;
+            }
+
+            cout << "Tamanho da lista de pesos dos candidatos: " << pesoListaCandidatos.size() << endl;
+            cout << "Tamanho da lista de ids dos candidatos: " << idListaCandidatos.size() << endl;
+
+            cout << "Lista de Candidatos: " << endl;
+            for(itPesoListaCandidatos = pesoListaCandidatos.begin(), itIdListaCandidatos = idListaCandidatos.begin(); itPesoListaCandidatos != pesoListaCandidatos.end(); itPesoListaCandidatos++, itIdListaCandidatos++){
+                cout << "ID: " << *itIdListaCandidatos << " PESO: " << *itPesoListaCandidatos << endl;
+            }
+
+            if(!idListaCandidatos.empty()){
+                //Aqui teria a iteração para escolher de acordo com o alfa
+                idClusterEscolhido = idListaCandidatos.front();
+                pesoClusterEscolhido = pesoListaCandidatos.front();
+
+                //Loop que avança até o iterator da lista selecionada
+                itListaClustersAux = listaClusters.begin();
+                for(int i = 1; i < idClusterEscolhido; i++){
+                    itListaClustersAux++;
+                }
+
+
+                //Aqui inserimos cada elemento do cluster escolhido no cluster atual de forma ordenada
+                itGuardaUltimaInsercao = itListaClusters->begin();
+                for(itElementosClusterAux = itListaClustersAux->begin(); itElementosClusterAux != itListaClustersAux->end(); itElementosClusterAux++){
+                    if(*itElementosClusterAux > itListaClusters->back()){
+                        itListaClusters->push_back(*itElementosClusterAux);
+                    } else {
+                        for(itElementosCluster = itGuardaUltimaInsercao; itElementosCluster != itListaClusters->end(); itElementosCluster++){
+                            if(*itElementosClusterAux < *itElementosCluster){
+                                itListaClusters->insert(itElementosCluster,*itElementosClusterAux);
+                                itGuardaUltimaInsercao = itElementosCluster;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                listaClusters.erase(itListaClustersAux);
+
+                pesoListaCandidatos.clear();
+                idListaCandidatos.clear();
+            }
+
+            if(listaClusters.size() == cluster){
+                break;
+            }
+        }
+
+    }
+    int soma = 0;
+    for(itListaClusters = listaClusters.begin(); itListaClusters != listaClusters.end(); itListaClusters++) {
+        cout << "Tamanho do cluster: " << itListaClusters->size() << endl;
+        for(auto it = itListaClusters->begin(); it != itListaClusters->end(); it++){
+            cout << *it << " ";
+        }
+        cout << endl;
+        cout << "Diferenca no CLuster: " <<itListaClusters->back() - itListaClusters->front() << endl;
+        soma = soma + itListaClusters->back() - itListaClusters->front();
+    }
+    cout << "SOMA = " << soma << endl;
+}
+
+void Graph::algoritmoGuloso2(int cluster) {
+    cout << "Algoritmo Guloso" << endl;
+    cout << "CLUSTER: " << cluster << endl;
+
+    list<list<int>> listaClusters; //Lista responsavel por armazenar as listas que armazenam os membros de cada cluster;
+    list<int> *ponteiroLista; //Ponteiro utilizado para popular a lista. Depois posso trocar isso.
+    //A lista de vetores guarda o menor e maior peso, alem da diferença de pesos e é usada para ter acesso rápido a essas infos importantes de cada cluster
     list<vector<int>> menorMaiorPesosClusters; //[0] = menorPeso, [1] = maiorPeso, [2] = diferença entre pesos
     list<vector<int>> listaCandidatos; //ID do candidato (posicao dele na lista de Clusters), [1] = Diferença de peso caso escolha o candidato
-    vector<int> *ponteiroVector;
+    list<int> idListaCandidatos, pesoListaCandidatos; //Listas que armazenam a posicao dos clusters candidatos e o peso que o merge entre clusters irá gerar
+    vector<int> *ponteiroVector; //Ponteiro utilizado para popular a lista de vetores. Talvez possa trocar isso no futuro.
 
     list<int> listaCrescrenteNosPorPeso; // Lista que armazena os ID's ROTULO dos Vertices
     ordenarCrescentementeNosPorPeso(&listaCrescrenteNosPorPeso);
@@ -535,6 +722,7 @@ void Graph::algoritmoGuloso(int cluster) {
     Node *noAtual = this->first_node;
 
     //Loop responsável por popular a listaClusters e tambem a lista de vectors
+    //Esse trecho terá q ser alterado se trocar a abordagem dos ponteiros no futuro
     //Aqui precisa rolar a ordenacao por peso
     for(int i = 0; i < this->order; i++){
         ponteiroLista = new list<int>;
@@ -551,16 +739,16 @@ void Graph::algoritmoGuloso(int cluster) {
 
     cout << "Tamanho da lista Cluters depois: " << listaClusters.size() << endl;
 
-    list<int> listaVizinhos;
+    list<int> listaVerticesVizinhos;
     Edge *arestaAtual;
     Node *noLeveAtual, *noPesadoAtual, *noLeveAlvo, *noPesadoAlvo;
-    int novoPesoLeve, novoPesoLeveAux, novoPesoPesado, novoPesoPesadoAux, menorDiferenca;
+    int novoPesoLeve, novoPesoLeveAux, novoPesoPesado, novoPesoPesadoAux;
     list<vector<int>>::iterator itMenorMaiorPesosClusters, itMenorMaiorPesosClustersAlvo, itMenorMaiorPesosClustersAux, itListaCandidatos;
     list<list<int>>::iterator itClusterAux;
 
 
 
-    int contadorID;
+    int contadorID, contadorListaCandidatos;
 
     while(listaClusters.size() > cluster){
 
@@ -568,7 +756,7 @@ void Graph::algoritmoGuloso(int cluster) {
 
         //percorre a lista de listas
         for(auto it = listaClusters.begin(); it != listaClusters.end(); it++, itMenorMaiorPesosClusters++){
-            menorDiferenca = int(INFINITY);
+//            menorDiferenca = int(INFINITY);
             noLeveAtual = getNodeByRotulo(it->front());
             noPesadoAtual = getNodeByRotulo(it->back());
 
@@ -579,15 +767,16 @@ void Graph::algoritmoGuloso(int cluster) {
                 //percorre as arestas do elemento da lista do cluster
                 while(arestaAtual != nullptr){
                     //verifica se o elemento ja foi inserido na lista de vizinhos dos elementos do cluster
-                    if(!contidoNaLista(arestaAtual->getTargetIdRotulo(),listaVizinhos)){
-                        listaVizinhos.push_back(arestaAtual->getTargetIdRotulo());
+                    if(!contidoNaLista(arestaAtual->getTargetIdRotulo(),listaVerticesVizinhos)){
+                        listaVerticesVizinhos.push_back(arestaAtual->getTargetIdRotulo());
                     }
                     arestaAtual = arestaAtual->getNextEdge();
                 }
             }
 
             itMenorMaiorPesosClustersAlvo = menorMaiorPesosClusters.begin();
-            contadorID = 0;
+            contadorID = 1;
+            contadorListaCandidatos = 0;
             //percorre a lista de listas novamente para verificar a conexidade entre o cluster atual com os demais
             for(auto itListaClusters = listaClusters.begin(); itListaClusters != listaClusters.end(); itListaClusters++, itMenorMaiorPesosClustersAlvo++){
                 //verifica se nao eh o mesmo cluster que estamos verificando conexidade
@@ -595,25 +784,33 @@ void Graph::algoritmoGuloso(int cluster) {
                     //percorre a lista alvo
                     for(auto itListaAlvo = itListaClusters->begin(); itListaAlvo != itListaClusters->end(); itListaAlvo++){
                         //verifica se manterá conexo
-                        if(contidoNaLista(*itListaAlvo,listaVizinhos)){
+                        if(contidoNaLista(*itListaAlvo,listaVerticesVizinhos)){
                             noLeveAlvo = getNodeByRotulo(itListaClusters->front());
                             noPesadoAlvo = getNodeByRotulo(itListaClusters->back());
                             novoPesoLeve = min(noLeveAtual->getWeight(),noLeveAlvo->getWeight());
                             novoPesoPesado = max(noPesadoAtual->getWeight(),noPesadoAlvo->getWeight());
 
                             //Aqui precisa inserir na lista de candidatos
-
-
-
-
-                            //Esse IF vai ser inutilizado depois, pois só serve quando nao tem os alfas
-                            if(novoPesoPesado - novoPesoLeve < menorDiferenca){
-                                menorDiferenca = novoPesoPesado - novoPesoLeve;
-                                itClusterAux = itListaClusters;
-                                itMenorMaiorPesosClustersAux = itMenorMaiorPesosClustersAlvo;
-                                novoPesoLeveAux = novoPesoLeve;
-                                novoPesoPesadoAux = novoPesoPesado;
+                            if(pesoListaCandidatos.empty() || novoPesoPesado - novoPesoLeve > pesoListaCandidatos.back()){
+                                pesoListaCandidatos.push_back(novoPesoPesado - novoPesoLeve);
+                                idListaCandidatos.push_back(contadorID);
+                            } else{
+                                for(auto itPesoListaCandidatos = pesoListaCandidatos.begin(), itIdListaCandidatos = idListaCandidatos.begin(); itPesoListaCandidatos != pesoListaCandidatos.end(); itPesoListaCandidatos++, itIdListaCandidatos++){
+                                    if(novoPesoPesado - novoPesoLeve < *itPesoListaCandidatos){
+                                        pesoListaCandidatos.insert(itPesoListaCandidatos,novoPesoPesado - novoPesoLeve);
+                                        idListaCandidatos.insert(itIdListaCandidatos,contadorID);
+                                        break;
+                                    }
+                                }
                             }
+                            //Esse IF vai ser inutilizado depois, pois só serve quando nao tem os alfas
+//                            if(novoPesoPesado - novoPesoLeve < menorDiferenca){
+//                                menorDiferenca = novoPesoPesado - novoPesoLeve;
+//                                itClusterAux = itListaClusters;
+//                                itMenorMaiorPesosClustersAux = itMenorMaiorPesosClustersAlvo;
+//                                novoPesoLeveAux = novoPesoLeve;
+//                                novoPesoPesadoAux = novoPesoPesado;
+//                            }
 
                         }
                     }
@@ -622,20 +819,49 @@ void Graph::algoritmoGuloso(int cluster) {
             }
 
             //Aqui escolheriamos o candidato
+            //IMPRIMINDO A LISTA DE CANDIDATOS PARA ANALISARMOS:
+            cout << "Lista de candidatos final: " << endl;
+            for(auto itPesoListaCandidatos = pesoListaCandidatos.begin(), itIdListaCandidatos = idListaCandidatos.begin(); itPesoListaCandidatos != pesoListaCandidatos.end(); itPesoListaCandidatos++, itIdListaCandidatos++){
+                cout << *itIdListaCandidatos << " " << *itPesoListaCandidatos << endl;
+            }
 
+            list<list<int>>::iterator itListaClusters2 = listaClusters.begin();
+            auto itMenorMaiorPesosClusters2 = menorMaiorPesosClusters.begin();
+            auto itMenorMaiorPesosClusters1 = menorMaiorPesosClusters.begin();
+            auto itPesoListaCandidatos = pesoListaCandidatos.begin();
 
+            for(int i = 0; i < idListaCandidatos.front();i++){
+                itListaClusters2++;
+                itMenorMaiorPesosClusters1++;
+                itMenorMaiorPesosClusters2++;
+                itPesoListaCandidatos++;
+            }
 
-            it->merge(*itClusterAux);
-            listaClusters.erase(itClusterAux);
+            cout << "Primeiro elemento da lista que estamos: " << itListaClusters2->front() << endl;
+
+            it->merge(*itListaClusters2);
+            listaClusters.erase(itListaClusters2);
             cout << "Tamanho da lista de vetores: " << menorMaiorPesosClusters.size() << endl;
-            menorMaiorPesosClusters.erase(itMenorMaiorPesosClustersAux);
+            menorMaiorPesosClusters.erase(itMenorMaiorPesosClusters2);
 
-            itMenorMaiorPesosClusters->clear();
-            itMenorMaiorPesosClusters->push_back(novoPesoLeveAux);
-            itMenorMaiorPesosClusters->push_back(novoPesoPesadoAux);
-            itMenorMaiorPesosClusters->push_back(menorDiferenca);
+//            it->merge(*itClusterAux);
+//            listaClusters.erase(itClusterAux);
+//            cout << "Tamanho da lista de vetores: " << menorMaiorPesosClusters.size() << endl;
+//            menorMaiorPesosClusters.erase(itMenorMaiorPesosClustersAux);
 
-            listaVizinhos.clear();
+            itMenorMaiorPesosClusters1->clear();
+            itMenorMaiorPesosClusters1->push_back(0);
+            itMenorMaiorPesosClusters1->push_back(0);
+            itMenorMaiorPesosClusters1->push_back(*itPesoListaCandidatos);
+
+//            itMenorMaiorPesosClusters->clear();
+//            itMenorMaiorPesosClusters->push_back(novoPesoLeveAux);
+//            itMenorMaiorPesosClusters->push_back(novoPesoPesadoAux);
+//            itMenorMaiorPesosClusters->push_back(menorDiferenca);
+
+            listaVerticesVizinhos.clear();
+            pesoListaCandidatos.clear();
+            idListaCandidatos.clear();
 
             if(listaClusters.size() == cluster){
                 break;
