@@ -542,6 +542,26 @@ void Graph::gerarClusters(list<list<int>> *listaClusters, list<list<int>>::itera
     }
 }
 
+void Graph::conhecerVizinhanca(list<int> *listaVerticesVizinhos, list<int>::iterator  itElementosCluster, list<list<int>>::iterator itListaClusters){
+
+    Node *noAtual;
+    Edge *arestaAtual;
+
+    for(itElementosCluster = itListaClusters->begin(); itElementosCluster != itListaClusters->end(); itElementosCluster++){
+        cout << "Tamanho da lista do cluster" << itListaClusters->size() << endl;
+        noAtual = getNodeByRotulo(*itElementosCluster);
+        arestaAtual = noAtual->getFirstEdge();
+        //Percorre as arestas do elemento atual da lista de elementos de um cluster
+        while(arestaAtual != nullptr){
+            //verifica se o elemento ja foi inserido na lista de vizinhos dos elementos do cluster
+            if(!contidoNaLista(arestaAtual->getTargetIdRotulo(),*listaVerticesVizinhos)){
+                listaVerticesVizinhos->push_back(arestaAtual->getTargetIdRotulo());
+            }
+            arestaAtual = arestaAtual->getNextEdge();
+        }
+    }
+}
+
 void Graph::algoritmoGuloso(int cluster) {
     cout << "Algoritmo Guloso" << endl;
     cout << "CLUSTER: " << cluster << endl;
@@ -559,7 +579,7 @@ void Graph::algoritmoGuloso(int cluster) {
 
     cout << "Tamanho da lista de Clusters antes " << listaClusters.size() << endl;
 
-    Node *noAtual;
+
 
     //Funcao responsavel por dividir cada nó em um cluster
     gerarClusters(&listaClusters,itListaClusters);
@@ -567,7 +587,7 @@ void Graph::algoritmoGuloso(int cluster) {
     cout << "Tamanho da lista Cluters depois: " << listaClusters.size() << endl;
 
     list<int> listaVerticesVizinhos;
-    Edge *arestaAtual;
+
     list<int>::iterator  itElementosCluster, itElementosClusterAux, itGuardaUltimaInsercao;
     int posicaoClusterAlvo, tamanhoListasCandidatos;
     int pesoLeveClusterAtual, pesoPesadoClusterAtual, pesoLeveClusterAlvo, pesoPesadoClusterAlvo, novoPesoLeve, novoPesoPesado;
@@ -586,21 +606,9 @@ void Graph::algoritmoGuloso(int cluster) {
                 }
                 cout << endl;
             }
-            //Criar funcao popularListaVerticesVizinhos ou conhecerVizinhanca (kkkk)
+
             //Primeiramente percorremos a lista de elementos do cluster para descobrir seus vertices vizinhos
-            for(itElementosCluster = itListaClusters->begin(); itElementosCluster != itListaClusters->end(); itElementosCluster++){
-                cout << "Tamanho da lista do cluster" << itListaClusters->size() << endl;
-                noAtual = getNodeByRotulo(*itElementosCluster);
-                arestaAtual = noAtual->getFirstEdge();
-                //Percorre as arestas do elemento atual da lista de elementos de um cluster
-                while(arestaAtual != nullptr){
-                    //verifica se o elemento ja foi inserido na lista de vizinhos dos elementos do cluster
-                    if(!contidoNaLista(arestaAtual->getTargetIdRotulo(),listaVerticesVizinhos)){
-                        listaVerticesVizinhos.push_back(arestaAtual->getTargetIdRotulo());
-                    }
-                    arestaAtual = arestaAtual->getNextEdge();
-                }
-            }
+            conhecerVizinhanca(&listaVerticesVizinhos,itElementosCluster,itListaClusters);
 
             posicaoClusterAlvo = 1;
 

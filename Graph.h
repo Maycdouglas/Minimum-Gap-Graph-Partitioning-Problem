@@ -62,6 +62,7 @@ public:
 
 private:
     //Auxiliar methods
+    void conhecerVizinhanca(list<int> *listaVerticesVizinhos, list<int>::iterator  itElementosCluster, list<list<int>>::iterator itListaClusters);
     void gerarClusters(list<list<int>> *listaClusters, list<list<int>>::iterator itListaClusters);
     int getElementoLista(list<int> lista, int indice);
     void removeElementoLista(list<int> *lista, int indice);
