@@ -534,6 +534,14 @@ void Graph::testeVector() {
 
 }
 
+void Graph::gerarClusters(list<list<int>> *listaClusters, list<list<int>>::iterator itListaClusters){
+    Node *noAtual = this->first_node;
+    for(itListaClusters = listaClusters->begin(); itListaClusters != listaClusters->end(); itListaClusters++){
+        itListaClusters->push_back(noAtual->getIdRotulo()); //popula cada cluster
+        noAtual = noAtual->getNextNode();
+    }
+}
+
 void Graph::algoritmoGuloso(int cluster) {
     cout << "Algoritmo Guloso" << endl;
     cout << "CLUSTER: " << cluster << endl;
@@ -541,26 +549,20 @@ void Graph::algoritmoGuloso(int cluster) {
     list<list<int>> listaClusters(this->order); //Lista responsavel por armazenar as listas que armazenam os membros de cada cluster;
     list<list<int>>::iterator itListaClusters, itListaClustersAux; //Iterator da lista de Clusters;
 
-    //list<vector<int>> menorMaiorDiferencaPesosClusters(this->order); //[0] = menorPeso, [1] = maiorPeso, [2] = diferença entre pesos
-    //list<vector<int>>::iterator itMMDPC; //Iterator da lista de vetores acima
-
     list<int> idListaCandidatos, pesoListaCandidatos; //Listas que armazenam a posicao dos clusters candidatos e o peso atualizado caso ocorra o merge
     list<int>::iterator itIdListaCandidatos;
     list<int>::iterator itPesoListaCandidatos;
 
-    list<int> listaCrescenteNosPorPeso;
-    list<int>::iterator  itListaCrescente;
-    ordenarCrescentementeNosPorPeso(&listaCrescenteNosPorPeso);
+//    list<int> listaCrescenteNosPorPeso;
+//    list<int>::iterator  itListaCrescente;
+//    ordenarCrescentementeNosPorPeso(&listaCrescenteNosPorPeso);
 
     cout << "Tamanho da lista de Clusters antes " << listaClusters.size() << endl;
 
     Node *noAtual;
 
-    //criar funcao gerarClusters
-    //Loop responsavel por dividir cada nó em um cluster e inserir as informacoes na lista de vetores que auxilia a lista de clusters
-    for(itListaClusters = listaClusters.begin(), itListaCrescente = listaCrescenteNosPorPeso.begin(); itListaClusters != listaClusters.end(); itListaClusters++, itListaCrescente++){
-        itListaClusters->push_back(*itListaCrescente); //popula cada cluster
-    }
+    //Funcao responsavel por dividir cada nó em um cluster
+    gerarClusters(&listaClusters,itListaClusters);
 
     cout << "Tamanho da lista Cluters depois: " << listaClusters.size() << endl;
 
