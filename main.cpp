@@ -212,7 +212,7 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file, int cluster){
             //Algoritmo Guloso Randomizado
         case 3:{
             cout << "Caso 3" << endl;
-            // graph->algoritmoGulosoRandomizado(cluster);
+            graph->algoritmoGulosoRandomizado(cluster, 0.1, 1000);
             break;
         }
 

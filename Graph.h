@@ -10,10 +10,17 @@
 
 using namespace std;
 
-struct solucao
+struct cluster 
 {
     int diferenca;
-    list<int> *clusters;
+    int tamanho;
+    list<int> listaCluster;
+};
+
+struct solucao
+{
+    int soma;
+    list<cluster> *clusters;
 };
 
 class Graph{
@@ -55,7 +62,7 @@ public:
     bool contidoNaLista(int elemento, list<int> lista);
     void ordenarCrescentementeNosPorPeso(list<int> *listaCrescrenteNosPorPeso);
     void ordenarDecrescentementeNosPorGrau(list<int> *listaDecrescrenteNosPorGrau);
-    void algoritmoGuloso(int cluster);
+    solucao algoritmoGuloso(int cluster);
     solucao algoritmoGulosoRandomizado(int clusters, float alfa, int numIter);
     solucao algoritmoGulosoRandomizadoReativo(int clusters, float alfas[], int numIter, int bloco);
 
@@ -71,6 +78,7 @@ private:
     void inicializacaoClusters(int clusters, list<int> *listaCrescrenteNosPorPeso, list<int> *listaDecrescrenteNosPorGrau, list<int> matrizCluster[], int matrizMenorMaiorCluster[][3]);
     void atualizaSolucao(int clusters, Node *noAtual, list<int> matrizCluster[], int matrizMenorMaiorCluster[][3], stack<int> *pilhaReservaVertices);
     void atualizaListaCandidatos(list<int> *listaCandidatos, int indice, stack<int> *pilhaReservaVertices);
+    solucao calculaSolucao(list<list<int>> *listaClusters);
     void inicializaVetoresReativo(float probabilidades[], float medias[], int numElementos);
     void atualizaProbabilidadesReativo(float probabilidades[], float medias[], int menorDiferenca, int numElementos);
     float escolheAlfaReativo(float probabilidades[], float alfas[], int numElementos);
