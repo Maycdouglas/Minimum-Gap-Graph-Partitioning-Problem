@@ -317,7 +317,6 @@ Graph* Graph::subgrafoVerticeInduzido(list<int> listaNosIdRotulo) {
 }
 
 void Graph::ordenarCrescentementeNosPorPeso(list<int> *listaCrescrenteNosPorPeso){
-    // cout << "Ordenar por Peso" << endl;
     Node *noAtual = this->first_node;
     Node *noLista, *noFinalLista;
 
@@ -341,18 +340,9 @@ void Graph::ordenarCrescentementeNosPorPeso(list<int> *listaCrescrenteNosPorPeso
         }
         noAtual = noAtual->getNextNode();
     }
-
-    // cout << "Lista Crescente por Peso: " << endl;
-
-    //Imprime a lista para verificarmos se está ordenando corretamente. NÃO ESTARÁ PRESENTE NO TRABALHO FINAL!
-    // for(auto it = listaCrescrenteNosPorPeso->begin(); it!=listaCrescrenteNosPorPeso->end(); it++){
-    //     cout << *it << " ";
-    // }
-    // cout << endl;
 }
 
 void Graph::ordenarDecrescentementeNosPorGrau(list<int> *listaDecrescrenteNosPorGrau){
-    // cout << "Ordenar por Grau" << endl;
     Node *noAtual = this->first_node;
     Node *noLista, *noFinalLista;
 
@@ -376,14 +366,6 @@ void Graph::ordenarDecrescentementeNosPorGrau(list<int> *listaDecrescrenteNosPor
         }
         noAtual = noAtual->getNextNode();
     }
-
-    // cout << "Lista Decrescente por grau: " << endl;
-
-    //Imprime a lista para verificarmos se está ordenando corretamente. NÃO ESTARÁ PRESENTE NO TRABALHO FINAL!
-    // for(auto it = listaDecrescrenteNosPorGrau->begin(); it != listaDecrescrenteNosPorGrau->end(); it++){
-    //     cout << *it << " ";
-    // }
-    // cout << endl;
 }
 
 void Graph::inicializacaoClusters(int clusters, list<int> *listaCrescrenteNosPorPeso, list<int> *listaDecrescrenteNosPorGrau, list<int> matrizCluster[], int matrizMenorMaiorCluster[][3]) {
@@ -407,8 +389,7 @@ void Graph::inicializacaoClusters(int clusters, list<int> *listaCrescrenteNosPor
                 matrizMenorMaiorCluster[contadorLinhaMatriz][0] = getNodeByRotulo(*it)->getWeight();
                 matrizMenorMaiorCluster[contadorLinhaMatriz][1] = getNodeByRotulo(*it)->getWeight();
                 matrizMenorMaiorCluster[contadorLinhaMatriz][2] = matrizMenorMaiorCluster[contadorLinhaMatriz][1] - matrizMenorMaiorCluster[contadorLinhaMatriz][0];
-                // cout << "Inseriu o numero " << *it << " no cluster " << contadorLinhaMatriz + 1 << endl;
-                // cout << "Novo menor: " << matrizMenorMaiorCluster[contadorLinhaMatriz][0] << " Novo maior: " << matrizMenorMaiorCluster[contadorLinhaMatriz][1] << endl;
+
                 listaDecrescrenteNosPorGrau->remove(*it);
                 contadorLinhaMatriz++;
             }
@@ -418,8 +399,7 @@ void Graph::inicializacaoClusters(int clusters, list<int> *listaCrescrenteNosPor
                 matrizMenorMaiorCluster[contadorLinhaMatriz][0] = getNodeByRotulo(*it)->getWeight();
                 matrizMenorMaiorCluster[contadorLinhaMatriz][1] = getNodeByRotulo(*it)->getWeight();
                 matrizMenorMaiorCluster[contadorLinhaMatriz][2] = matrizMenorMaiorCluster[contadorLinhaMatriz][1] - matrizMenorMaiorCluster[contadorLinhaMatriz][0];
-                // cout << "Inseriu o numero " << *it << " no cluster " << contadorLinhaMatriz + 1 << endl;
-                // cout << "Novo menor: " << matrizMenorMaiorCluster[contadorLinhaMatriz][0] << " Novo maior: " << matrizMenorMaiorCluster[contadorLinhaMatriz][1] << endl;
+                
                 listaDecrescrenteNosPorGrau->remove(*it);
                 contadorLinhaMatriz++;
                 contadorNaoDivisivel++;
@@ -440,11 +420,11 @@ void Graph::atualizaSolucao(int clusters, Node *noAtual, list<int> matrizCluster
     atualizouMaior = false;
     encontrouCluster = false;
     colocouNaPilha = false;
-    // cout << "CHEGOU AQUI 2" << endl;
+
     for(int i = 0; i < clusters; i++){
         pesoNoLeve = matrizMenorMaiorCluster[i][0];
         pesoNoPesado = matrizMenorMaiorCluster[i][1];
-        // cout << "CHEGOU AQUI 3" << endl;
+
         if(noAtual->getWeight() < pesoNoLeve){
             //Condicional que garante a conexidade entre os elementos dos clusters
             if(pesoNoPesado - noAtual->getWeight() < menorDiferenca[0] && mantemConexidade(matrizCluster[i],noAtual)){
@@ -495,18 +475,16 @@ void Graph::atualizaSolucao(int clusters, Node *noAtual, list<int> matrizCluster
             }
 
         } else if(!encontrouCluster){
-            // cout << "Nao encontrou conexidade" << endl;
             if(!colocouNaPilha){
                 colocouNaPilha = true;
                 pilhaReservaVertices->push(noAtual->getIdRotulo());
             }
         }
     }
-    // cout << "CHEGOU AQUI 4" << endl;
+    
     if(encontrouCluster){
-        // cout << "ENCONTROU UM CLUSTER PARA ELE ->  " << noAtual->getIdRotulo() << endl;
         matrizCluster[menorDiferenca[1]].push_back(noAtual->getIdRotulo());
-        // cout << "O CLUSTER QUE ELE ENTROU FOI: " << menorDiferenca[1] + 1 << endl;
+
         if(!semDiferenca){
             if(atualizouMenor){
                 matrizMenorMaiorCluster[menorDiferenca[1]][0] = noAtual->getWeight();
@@ -523,14 +501,8 @@ void Graph::atualizaListaCandidatos(list<int> *listaCandidatos, int indice, stac
     removeElementoLista(listaCandidatos, indice);
     
     if (listaCandidatos->empty() && !pilhaReservaVertices->empty()) {
-        // cout << "A lista acabou e a pilha nao esta vazia!" << endl;
         while (!pilhaReservaVertices->empty()) {
             listaCandidatos->push_front(pilhaReservaVertices->top());
-            // cout << "LISTA ATUALMENTE3: " << endl;
-            // for (auto it = listaCandidatos->begin(); it != listaCandidatos->end(); it++) {
-            //     cout << *it << " ";
-            // }
-            // cout << endl;
             pilhaReservaVertices->pop();
         }
     }
@@ -589,46 +561,6 @@ solucao Graph::algoritmoGulosoRandomizado(int clusters, float alfa, int numIter)
         } else {
             delete [] matrizCluster;
         }
-
-        // ================= EXIBIÇÃO DE RESULTADOS ====================
-
-        // for(int i = 0; i < clusters; i++){
-        //     cout << "Membros do Cluster " << i+1 << endl;
-        //     for(auto it = melhorSolucao[i].begin(); it != melhorSolucao[i].end(); it++){
-        //         cout << *it << " ";
-        //     }
-        //     cout << endl;
-        // }
-
-        // cout << "DIFERENCA DOS CLUSTERS: " << endl;
-        // for(int i = 0; i < clusters; i++){
-        //     cout << "Menor peso do Cluster " << i+1 << " = " << matrizMenorMaiorCluster[i][0] << endl;
-        //     cout << "Maior peso do Cluster " << i+1 << " = " << matrizMenorMaiorCluster[i][1] << endl;
-        //     cout << "Diferenca do Cluster " << i+1 << " = " << matrizMenorMaiorCluster[i][2] << endl;
-        // }
-
-        // Checagem de conexidade
-        // for (int i = 0; i < clusters; i++) {
-        //     list<int> clusterAtual = melhorSolucao[i];
-        //     Graph *subgrafoCluster = subgrafoVerticeInduzido(clusterAtual);
-
-            // Exibindo lista de adjacência do cluster (NÃO SERÁ MANTIDO NO TRABALHO FINAL)
-            // for (Node *noAtual = subgrafoCluster->getFirstNode(); noAtual != nullptr; noAtual = noAtual->getNextNode()) {
-            //     cout << noAtual->getIdRotulo() << " -> ";
-            //     for (Edge *arestaAtual = noAtual->getFirstEdge(); arestaAtual != nullptr; arestaAtual = arestaAtual->getNextEdge()) {
-            //         cout << arestaAtual->getTargetIdRotulo() << " ";
-            //     }
-            //     cout << endl;
-            // }
-
-            // Verificando conexidade do cluster
-        //     cout << "Cluster" << i + 1 << " - Conexo: ";
-        //     cout << boolalpha << subgrafoCluster->ehConexo() << endl;
-        // }
-
-        // cout << "GAP: " << diferencaSolucaoAtual << endl;
-
-        // ================= FIM EXIBIÇÃO DE RESULTADOS ====================
     }
 
     solucao structMelhorSolucao = {
@@ -646,11 +578,10 @@ solucao Graph::algoritmoGuloso(int clusters) {
 //Funcao que verifica se a inserção de um novo elemento no cluster manterá a conexidade do cluster
 bool Graph::mantemConexidade(list<int> listaCluster,Node *noAtual) {
     Node *noAlvo;
-    // cout << "=== ESTOU NA FUNCAO MANTEM CONEXIDADE "<< endl;
-    // cout << "O noh atual eh: " << noAtual->getIdRotulo() << endl;
+
     for (auto it = listaCluster.begin(); it != listaCluster.end(); it++) {
         noAlvo = getNodeByRotulo(*it);
-        // cout << "O noh alvo eh: " << noAlvo->getIdRotulo() << endl;
+        
         if(noAtual->searchEdge(noAlvo->getId())){
             return true;
         }
@@ -661,10 +592,8 @@ bool Graph::mantemConexidade(list<int> listaCluster,Node *noAtual) {
 void Graph::inicializaVetoresReativo(float probabilidades[], float medias[], int numElementos) {
     float probabilidadeInicial = (float) (1.0 / numElementos) * 100;
 
-    // cout << "Probabilidades: ";
     for (int i = 0; i < numElementos; i++) {
         probabilidades[i] = probabilidadeInicial;
-        // cout << probabilidades[i] << " ";
         medias[i] = INFINITY;
     }
     cout << endl;
@@ -674,20 +603,14 @@ void Graph::atualizaProbabilidadesReativo(float probabilidades[], float medias[]
     float qi[10] = {0.0};
     float somatorioQi = 0;
 
-    // cout << "Qi: ";
     for (int i = 0; i < numElementos; i++) {
         qi[i] = powf(menorDiferenca / medias[i], 10);
         somatorioQi += qi[i];
-        // cout << qi[i] << " ";
     }
-    // cout << endl;
 
-    // cout << "Probabilidades: ";
     for (int i = 0; i < numElementos; i++) {
         probabilidades[i] = (qi[i] / somatorioQi) * 100;
-        // cout << probabilidades[i] << " ";
     }
-    // cout << endl;
 }
 
 float Graph::escolheAlfaReativo(float probabilidades[], float alfas[], int numElementos) {
@@ -698,17 +621,14 @@ float Graph::escolheAlfaReativo(float probabilidades[], float alfas[], int numEl
         probabilidadeAcumulada += probabilidades[i];
 
         if (numeroAleatorio <= probabilidadeAcumulada) {
-            // cout << "Alfa: " << alfas[i] << endl;
             return alfas[i];
         }
     }
-    // cout << "ALFA QUE SOBROU";
 
     return alfas[numElementos - 1];
 }
 
 void Graph::atualizarMediasReativo(float medias[], int acumuladorDiferencas[], int contadorDiferencasPorAlfa[], int diferenca, float alfas[], float alfa, int numElementos) {
-    // cout << "Medias: ";
     for (int i = 0; i < numElementos; i++) {
         if (alfas[i] == alfa) {
             acumuladorDiferencas[i] += diferenca;
@@ -717,17 +637,9 @@ void Graph::atualizarMediasReativo(float medias[], int acumuladorDiferencas[], i
             break;
         }
     }
-
-    // for (int i = 0; i < numElementos; i++) {
-    //     cout << medias[i] << " ";
-    // }
-    // cout << endl;
 }
 
 solucao Graph::algoritmoGulosoRandomizadoReativo(int clusters, float alfas[], int numIter, int bloco) {
-    // cout << "Algoritmo Guloso Randomizado Reativo" << endl;
-    // cout << "CLUSTERS: " << clusters << endl;
-
     list<int> *melhorSolucao = nullptr;
     int menorDiferenca = (int) INFINITY;
 
@@ -794,9 +706,6 @@ solucao Graph::algoritmoGulosoRandomizadoReativo(int clusters, float alfas[], in
         } else {
             delete [] matrizCluster;
         }
-
-        // cout << "Atual: " << diferencaSolucaoAtual << endl; 
-        // cout << "Melhor: " << menorDiferenca << endl;
     }
 
     solucao structMelhorSolucao = {
@@ -833,17 +742,14 @@ bool Graph::ehConexo() {
     return conexo;
 }
 
-// void Graph::floyd(int idRotuloInicial, int idRotuloFinal, float **matrizVertices){
 float** Graph::floyd() {
     // Alocando matriz de vértices
     float **matrizVertices = new float*[this->order];
     for (int j = 0; j < this->order; j++)
         matrizVertices[j] = new float[this->order];  // Alocando linhas da matriz
-
-    // Node *noAtual, *noAlvo, *noInicial = getNodeByRotulo(idRotuloInicial), *noFinal = getNodeByRotulo(idRotuloFinal);
+        
     Node *noAtual, *noAlvo;
     Edge *arestaAtual;
-    // int linha, coluna, idInicial = noInicial->getId(), idFinal = noFinal->getId();
     int linha, coluna;
     list <int> caminho;
     list<int>::iterator it;
@@ -853,18 +759,6 @@ float** Graph::floyd() {
         cout << "O grafo precisa ter peso nas arestas!" << endl;
         return nullptr;
     }
-
-    //Clausula de segurança para nós que não existem no grafo
-    // if(noInicial == nullptr || noFinal == nullptr){
-    //     cout << "O no escolhido nao esta presente no grafo!" << endl;
-    //     return;
-    // }
-
-    //Clausula de segurança para nós que não possuem Out Degree
-    // if(noInicial->getOutDegree() < 1){
-    //     cout << "O no escolhido possui grau de saida igual a zero!" << endl;
-    //     return;
-    // }
 
     //Loop responsável por montar a matriz inicial
     for(linha = 0; linha < this->order; linha++) {
@@ -882,12 +776,6 @@ float** Graph::floyd() {
                 }
 
                 matrizVertices[linha][coluna] = arestaAtual->getWeight(); //insere a distancia entre os dois vertices na matriz
-
-                //caso exista aresta entre o nó inicial e o nó final, a lista caminho é atualizada
-                // if(linha == idInicial - 1 && coluna == idFinal - 1){
-                //     caminho.push_front(idInicial);
-                //     caminho.push_back(idFinal);
-                // }
             } else {
                 matrizVertices[linha][coluna] = INFINITY; //quando não houver arestas entre os vértices, o valor INFINITO é usado
             }
@@ -907,18 +795,6 @@ float** Graph::floyd() {
                         //verifica se o caminho atual na matriz é maior que o novo caminho proposto
                         if(matrizVertices[linha][coluna] > matrizVertices[linha][k] + matrizVertices[k][coluna]){
                             matrizVertices[linha][coluna] = matrizVertices[linha][k] + matrizVertices[k][coluna];
-                            //verifica se atualizou o caminho entre os nós escolhidos pelo usuario
-                            // if(linha == idInicial - 1 && coluna == idFinal - 1){
-                            //     //se o caminho estiver vazio, realiza a primeira inserção
-                            //     if(caminho.empty()){
-                            //         caminho.push_front(k + 1);
-                            //         caminho.push_back(idFinal);
-                            //     } else{
-                            //         it = caminho.end();
-                            //         it--;
-                            //         caminho.insert(it,k + 1); //adiciona o novo vertice no caminho na penultima posição
-                            //     }
-                            // }
                         }
                     }
                 }

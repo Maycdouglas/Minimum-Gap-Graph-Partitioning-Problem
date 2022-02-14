@@ -101,26 +101,19 @@ Graph* leituraInstancia2(ifstream& input_file, int directed, int weightedEdge, i
     while(contador < 10){
         if(contador == 3){
             input_file >> *cluster;
-            cout << *cluster << endl;
         } else {
             input_file >> descarte;
-            cout << descarte << endl;
         }
         contador++;
     }
 
     contador = 0;
 
-    cout << "=====" << endl;
-
     while(contador < 6){
         if(contador == 1){
-            cout << "ORDER:" << endl;
             input_file >> order;
-            cout << order << endl;
         } else {
             input_file >> descarte;
-            cout << descarte << endl;
         }
         contador++;
     }
@@ -129,7 +122,6 @@ Graph* leituraInstancia2(ifstream& input_file, int directed, int weightedEdge, i
 
     while(contador < order){
         input_file >> idNodeSource;
-        cout << idNodeSource << endl;
         contador++;
     }
 
@@ -137,7 +129,6 @@ Graph* leituraInstancia2(ifstream& input_file, int directed, int weightedEdge, i
 
     while(contador < 4) {
         input_file >> descarte;
-        cout << descarte << endl;
         contador++;
     }
 
@@ -149,38 +140,26 @@ Graph* leituraInstancia2(ifstream& input_file, int directed, int weightedEdge, i
         contador++;
     }
 
-    cout << "A ordem do grafo eh: " << graph->getOrder() << endl;
-
     contador = 0;
 
     while(contador < 7){
         if(contador == 2){
-            cout << "NUMERO DE ARESTAS:" << endl;
             input_file >> numEdges;
-            cout << numEdges << endl;
         } else {
             input_file >> descarte;
-            cout << descarte << endl;
         }
         contador++;
     }
 
     contador = 0;
 
-    cout << "Numero de arestas: " << numEdges << endl;
-
     while(contador < numEdges / 2){
-        cout << "CONTADOR = " << contador << endl;
         input_file >> aresta;
         posicaoParanteses = aresta.find(")");
         posicaoVirgula = aresta.find(",");
-        cout << posicaoParanteses << endl;
-        cout << posicaoVirgula << endl;
-        cout << aresta << endl;
+
         idNodeSource = stoi(aresta.substr(1,posicaoVirgula - 1));
-        cout << idNodeSource << endl;
         idNodeTarget = stoi(aresta.substr(posicaoVirgula + 1,posicaoParanteses - posicaoVirgula - 1));
-        cout << idNodeTarget << endl;
 
         graph->insertEdge(idNodeSource,idNodeTarget,0);
 
@@ -244,13 +223,9 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file, int cluster){
             cout << "Caso 1" << endl;
             Node *noAtual = graph->getFirstNode();
             Edge *arestaAtual;
-            cout << "A ordem do grafo eh: " << graph->getOrder() << endl;
             while(noAtual != nullptr ){
-
-                cout << "Estou no no: " << noAtual->getIdRotulo() << endl;
                 arestaAtual = noAtual->getFirstEdge();
                 while(arestaAtual != nullptr){
-                    cout << "Estou na aresta com origem " << arestaAtual->getOriginIdRotulo() << " e alvo " << arestaAtual->getTargetIdRotulo() << endl;
                     arestaAtual = arestaAtual->getNextEdge();
                 }
                 noAtual = noAtual->getNextNode();

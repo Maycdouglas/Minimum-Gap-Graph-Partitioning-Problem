@@ -23,11 +23,6 @@ Edge::Edge(int target_id, int origin_id, int target_id_rotulo, int origin_id_rot
 
 // Destructor
 Edge::~Edge(){
-//
-//    if (this->next_edge != nullptr){
-//        delete this->next_edge;
-//        this->next_edge = nullptr;
-//    }
     this->next_edge = nullptr;
 }
 
